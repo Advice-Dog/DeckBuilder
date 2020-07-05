@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="200dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/hero"
+                    android:layout_width="@dimen/entity_width"
+                    android:layout_height="@dimen/entity_height"
+                    android:src="@drawable/ironclad" />
+
+                <TextView
+                    android:id="@+id/hero_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    tools:text="40/50 HP" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/combat_log"
+                android:layout_width="400dp"
+                android:layout_height="wrap_content"
+                tools:text="Ironclad deals 9 damage to enemy." />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/enemy_intent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    tools:text="Deal 11 damage." />
+
+                <ImageView
+                    android:id="@+id/enemy"
+                    android:layout_width="@dimen/entity_width"
+                    android:layout_height="@dimen/entity_height"
+                    android:src="@drawable/cultist" />
+
+                <TextView
+                    android:id="@+id/enemy_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    tools:text="40/50 HP" />
+
+                <TextView
+                    android:id="@+id/enemy_status_effects"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Weakened (2)" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        tools:background="@color/red_background">
+
+        <LinearLayout
+            android:id="@+id/hand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:alpha="0.5"
+            tools:layout_height="300dp">
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+    <Button
+        android:id="@+id/end_turn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="32dp"
+        android:padding="32dp"
+        android:text="End Turn" />
+
+    <TextView
+        android:id="@+id/energy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:textSize="64sp"
+        tools:text="3/3" />
+
+
+</FrameLayout>
