@@ -81,8 +81,7 @@ open class Entity(
             return i * 3
         }
 
-        val strength = statusEffects.count { it is FlexBuff }
-        return strength * 2  // 2 strength per stack
+        return statusEffects.filterIsInstance<FlexBuff>().sumBy { it.strength }
     }
 
     fun getAgility() = agility
@@ -102,8 +101,8 @@ open class Entity(
         statusEffects.removeAll { it.hasExpired() }
     }
 
-    fun getScaledDamage(entity: Entity, damage: Int): Int {
-        val base = damage + entity.getStrength()
+    fun getScaledDamage(entity: Entity, damage: Int, scale: Int = 1): Int {
+        val base = damage + (entity.getStrength() * scale)
 
         val isVulnerable = statusEffects.any { it is Vulnerable }
         if (isVulnerable) {

@@ -38,8 +38,11 @@ object GameManager {
 
         val bonus = redCards.shuffled().take(5)
         //deck.addCards(bonus)
-        deck.addCard(Thunderclap())
+        //deck.addCard(Thunderclap())
         //deck.addCard(Anger())
+
+        deck.addCard(Flex())
+        deck.addCard(HeavyBlade())
     }
 
     fun setEnemy(enemy: Enemy) {

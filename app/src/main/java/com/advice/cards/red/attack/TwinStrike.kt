@@ -10,13 +10,6 @@ class TwinStrike : Card(CardType.ATTACK, TargetType.ENEMY, count = 2) {
         effects.add(DamageEffect(damage))
     }
 
-    override val description: String
-        get() = "Deal $damage damage twice."
-
-    override fun play(self: Entity, entity: Entity) {
-        effects.forEach { it.apply(self, entity) }
-    }
-
     override fun getDescription(self: Entity, target: Entity?): String {
         return effects.first().getDescription(self, target).replace(".", " twice.")
     }

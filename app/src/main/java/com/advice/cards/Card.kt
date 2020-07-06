@@ -126,6 +126,26 @@ class DamageEffect(private val amount: Int) : Effect() {
     override fun toString() = "Deal $amount damage."
 }
 
+class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1): Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?): Int {
+        if (target != null) {
+            return target.getScaledDamage(self, amount, scale)
+        }
+        return amount + (self.getStrength() * scale)
+    }
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Deal ${getScaledValue(self, target)} damage. Strength affects this card $scale times."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val damage = getScaledValue(self, target)
+        target.dealDamage(damage)
+    }
+
+    override fun toString() = "Deal $amount damage. Strength affects this card $scale times."
+}
+
 class BlockEffect(private val amount: Int) : Effect() {
     override fun getScaledValue(self: Entity, target: Entity?): Int {
         return amount + self.getAgility()
@@ -140,7 +160,22 @@ class BlockEffect(private val amount: Int) : Effect() {
     }
 }
 
-class ApplyStatusEffectEffect(private val effect: StatusEffect) : Effect() {
+class BlockDamageEffect : Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?): Int {
+        return target?.getScaledDamage(self, self.getBlock()) ?: self.getBlock()
+    }
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Deal damage equal to your Block."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val amount = getScaledValue(self, target)
+        target.dealDamage(amount)
+    }
+}
+
+class ApplyStatusEffectEffect(private val effect: StatusEffect, private val targetType: TargetType = TargetType.ENEMY) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?) = -1
 
@@ -149,9 +184,12 @@ class ApplyStatusEffectEffect(private val effect: StatusEffect) : Effect() {
     }
 
     override fun apply(self: Entity, target: Entity) {
-        target.applyStatusEffect(effect)
+        if(targetType == TargetType.ENEMY) {
+            target.applyStatusEffect(effect)
+        } else {
+            self.applyStatusEffect(effect)
+        }
     }
-
 }
 
 class DrawCardEffect(private val count: Int) : Effect() {

@@ -1,13 +1,13 @@
 package com.advice.cards.red.attack
 
-import com.advice.cards.*
+import com.advice.cards.BlockDamageEffect
+import com.advice.cards.Card
+import com.advice.cards.CardType
+import com.advice.cards.TargetType
 
 class BodySlam : Card(CardType.ATTACK, TargetType.ENEMY) {
 
-    override val description: String
-        get() = "Deal damage equal to your Block."
-
-    override fun play(self: Entity, entity: Entity) {
-        entity.dealDamage(self.getBlock())
+    init {
+        effects.add(BlockDamageEffect())
     }
 }
