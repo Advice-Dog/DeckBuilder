@@ -7,6 +7,7 @@ class Deck(val cards: List<Card> = emptyList()) {
     val hand = ArrayList<Card>()
     val draw = ArrayList<Card>()
     val discard = ArrayList<Card>()
+    val exhaust = ArrayList<Card>()
 
     init {
         deck.addAll(cards)
@@ -50,6 +51,11 @@ class Deck(val cards: List<Card> = emptyList()) {
         discard.add(card)
     }
 
+    fun exhaustCard(card: Card) {
+        hand.remove(card)
+        exhaust.add(card)
+    }
+
     fun shuffleDiscardIntoDraw() {
         draw.addAll(discard)
         draw.shuffle()
@@ -66,6 +72,7 @@ class Deck(val cards: List<Card> = emptyList()) {
     fun endCombat() {
         hand.clear()
         draw.clear()
+        exhaust.clear()
         discard.clear()
     }
 

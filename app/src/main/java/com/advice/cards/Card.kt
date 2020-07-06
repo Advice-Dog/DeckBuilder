@@ -126,7 +126,7 @@ class DamageEffect(private val amount: Int) : Effect() {
     override fun toString() = "Deal $amount damage."
 }
 
-class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1): Effect() {
+class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1) : Effect() {
     override fun getScaledValue(self: Entity, target: Entity?): Int {
         if (target != null) {
             return target.getScaledDamage(self, amount, scale)
@@ -135,7 +135,10 @@ class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1): E
     }
 
     override fun getDescription(self: Entity, target: Entity?): String {
-        return "Deal ${getScaledValue(self, target)} damage. Strength affects this card $scale times."
+        return "Deal ${getScaledValue(
+            self,
+            target
+        )} damage. Strength affects this card $scale times."
     }
 
     override fun apply(self: Entity, target: Entity) {
@@ -144,6 +147,35 @@ class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1): E
     }
 
     override fun toString() = "Deal $amount damage. Strength affects this card $scale times."
+}
+
+class PerfectedStrikeDamageEffect(private val amount: Int, private val bonus: Int = 2) : Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?): Int {
+        val count =
+            (self as Hero).deck.cards.count { it.name.contains("strike", ignoreCase = true) }
+
+        val bonus = count * bonus
+
+        if (target != null) {
+            return target.getScaledDamage(self, amount + bonus)
+        }
+        return amount + self.getStrength() + bonus
+    }
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Deal ${getScaledValue(
+            self,
+            target
+        )} damage.\nDeals $bonus additional damage for ALL your cards containing \"Strike\"."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val damage = getScaledValue(self, target)
+        target.dealDamage(damage)
+    }
+
+    override fun toString() =
+        "Deal $amount damage.\nDeals $bonus additional damage for ALL your cards containing \"Strike\"."
 }
 
 class BlockEffect(private val amount: Int) : Effect() {
@@ -175,7 +207,10 @@ class BlockDamageEffect : Effect() {
     }
 }
 
-class ApplyStatusEffectEffect(private val effect: StatusEffect, private val targetType: TargetType = TargetType.ENEMY) : Effect() {
+class ApplyStatusEffectEffect(
+    private val effect: StatusEffect,
+    private val targetType: TargetType = TargetType.ENEMY
+) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?) = -1
 
@@ -184,10 +219,33 @@ class ApplyStatusEffectEffect(private val effect: StatusEffect, private val targ
     }
 
     override fun apply(self: Entity, target: Entity) {
-        if(targetType == TargetType.ENEMY) {
+        if (targetType == TargetType.ENEMY) {
             target.applyStatusEffect(effect)
         } else {
             self.applyStatusEffect(effect)
+        }
+    }
+}
+
+class UpdateHandCardEffect(private val update: Upgrade) : Effect() {
+
+    enum class Upgrade {
+        ONE,
+        ALL
+    }
+
+    override fun getScaledValue(self: Entity, target: Entity?) = -1
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Upgrade a card in your hand for the rest of combat."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val hand = (self as Hero).deck.hand
+        if (update == Upgrade.ONE) {
+            hand.random().upgrade()
+        } else {
+            hand.forEach { it.upgrade() }
         }
     }
 }
@@ -205,6 +263,31 @@ class DrawCardEffect(private val count: Int) : Effect() {
     override fun apply(self: Entity, target: Entity) {
         (self as Hero).deck.drawCard(count)
     }
+}
+
+class ExhaustCardEffect(private val cardTarget: Target): Effect() {
+
+    enum class Target {
+        RANDOM,
+        NOT_RANDOM
+    }
+
+    override fun getScaledValue(self: Entity, target: Entity?) = -1
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Exhaust a random card in your hand."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val deck = (self as Hero).deck
+        val hand = deck.hand
+        if(cardTarget == Target.RANDOM) {
+            deck.exhaustCard(hand.random())
+        } else {
+            TODO()
+        }
+    }
+
 }
 
 class CopyToDiscardEffect(private val card: Card) : Effect() {

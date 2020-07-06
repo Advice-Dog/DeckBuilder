@@ -3,8 +3,10 @@ package com.advice.cards
 import com.advice.cards.enemies.Cultist
 import com.advice.cards.hero.Ironclad
 import com.advice.cards.red.attack.*
+import com.advice.cards.red.skill.Armaments
 import com.advice.cards.red.skill.Flex
 import com.advice.cards.red.skill.ShrugItOff
+import com.advice.cards.red.skill.TrueGrit
 
 object GameManager {
 
@@ -23,7 +25,8 @@ object GameManager {
         TwinStrike(),
         //Defend(), starter card
         Flex(),
-        ShrugItOff()
+        ShrugItOff(),
+        Armaments()
     )
 
     val hero = Ironclad()
@@ -41,8 +44,8 @@ object GameManager {
         //deck.addCard(Thunderclap())
         //deck.addCard(Anger())
 
-        deck.addCard(Flex())
-        deck.addCard(HeavyBlade())
+        deck.addCard(PerfectedStrike())
+        deck.addCard(TrueGrit())
     }
 
     fun setEnemy(enemy: Enemy) {
