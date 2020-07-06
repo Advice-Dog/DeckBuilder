@@ -3,10 +3,7 @@ package com.advice.cards
 import com.advice.cards.enemies.Cultist
 import com.advice.cards.hero.Ironclad
 import com.advice.cards.red.attack.*
-import com.advice.cards.red.skill.Armaments
-import com.advice.cards.red.skill.Flex
-import com.advice.cards.red.skill.ShrugItOff
-import com.advice.cards.red.skill.TrueGrit
+import com.advice.cards.red.skill.*
 import java.util.*
 
 object GameManager {
@@ -29,7 +26,15 @@ object GameManager {
         //Defend(), starter card
         Flex(),
         ShrugItOff(),
-        Armaments()
+        Armaments(),
+
+        // uncommon
+        SeeingRed(),
+        Shockwave(),
+        Uppercut(),
+
+        // rare
+        Bludgeon()
     )
 
     val hero = Ironclad()
@@ -66,8 +71,19 @@ object GameManager {
     }
 
     fun getCardRewards(): List<Card> {
-        return redCards.shuffled(seed).take(3)
+        val index = seed.nextInt(100)
+        val rarity = getRewardRarity(index)
+
+        return redCards
+            //.filter { it.rarity == rarity }
+            .shuffled(seed).take(3)
     }
 
-
+    private fun getRewardRarity(index: Int): CardRarity {
+        return when {
+            index > 90 -> CardRarity.RARE
+            index > 80 -> CardRarity.UNCOMMON
+            else -> CardRarity.COMMON
+        }
+    }
 }

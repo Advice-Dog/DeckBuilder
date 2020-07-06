@@ -111,6 +111,8 @@ open class Entity(
         return base
     }
 
+
+
 }
 
 open class Hero(val deck: Deck = Deck()) : Entity(50) {
@@ -136,6 +138,10 @@ open class Hero(val deck: Deck = Deck()) : Entity(50) {
 
     fun startTurn() {
         energy = maxEnergy
+    }
+
+    fun addEnergy(amount: Int) {
+        energy += amount
     }
 }
 

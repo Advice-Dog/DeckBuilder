@@ -227,6 +227,19 @@ class ApplyStatusEffectEffect(
     }
 }
 
+class AddEnergyEffect(private val amount: Int) : Effect() {
+
+    override fun getScaledValue(self: Entity, target: Entity?) = -1
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Gain $amount energy."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        (self as Hero).addEnergy(amount)
+    }
+}
+
 class UpdateHandCardEffect(private val update: Upgrade) : Effect() {
 
     enum class Upgrade {
@@ -265,7 +278,7 @@ class DrawCardEffect(private val count: Int) : Effect() {
     }
 }
 
-class ExhaustCardEffect(private val cardTarget: Target): Effect() {
+class ExhaustCardEffect(private val cardTarget: Target) : Effect() {
 
     enum class Target {
         RANDOM,
@@ -281,7 +294,7 @@ class ExhaustCardEffect(private val cardTarget: Target): Effect() {
     override fun apply(self: Entity, target: Entity) {
         val deck = (self as Hero).deck
         val hand = deck.hand
-        if(cardTarget == Target.RANDOM) {
+        if (cardTarget == Target.RANDOM) {
             deck.exhaustCard(hand.random())
         } else {
             TODO()
