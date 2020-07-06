@@ -37,8 +37,8 @@ object GameManager {
 
 
         val bonus = redCards.shuffled().take(5)
-        deck.addCards(bonus)
-        //deck.addCard(Anger())
+        //deck.addCards(bonus)
+        deck.addCard(Thunderclap())
         //deck.addCard(Anger())
     }
 

@@ -44,6 +44,13 @@ abstract class Card(
 
     open fun getDescription(self: Entity, target: Entity?): String {
         if (effects.isNotEmpty()) {
+            if (this.target == TargetType.ALL_ENEMY && effects.size == 2) {
+                val first = effects.first().getDescription(self, target).replace(".", " and ")
+                val last = effects.last().getDescription(self, target).toLowerCase()
+                    .replace(".", " to ALL enemies.")
+                return first + last
+            }
+
             return effects.joinToString(separator = "\n") { it.getDescription(self, target) }
         }
         return description
@@ -119,6 +126,20 @@ class DamageEffect(private val amount: Int) : Effect() {
     override fun toString() = "Deal $amount damage."
 }
 
+class BlockEffect(private val amount: Int) : Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?): Int {
+        return amount + self.getAgility()
+    }
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Gain ${getScaledValue(self, target)} Block."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        self.addBlock(getScaledValue(self, target))
+    }
+}
+
 class ApplyStatusEffectEffect(private val effect: StatusEffect) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?) = -1
@@ -131,6 +152,21 @@ class ApplyStatusEffectEffect(private val effect: StatusEffect) : Effect() {
         target.applyStatusEffect(effect)
     }
 
+}
+
+class DrawCardEffect(private val count: Int) : Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?) = -1
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        if (count == 1) {
+            return "Draw $count card."
+        }
+        return "Draw $count cards."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        (self as Hero).deck.drawCard(count)
+    }
 }
 
 class CopyToDiscardEffect(private val card: Card) : Effect() {
