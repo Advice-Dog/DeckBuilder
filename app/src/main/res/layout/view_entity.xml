@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/enemy_intent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="Deal 11 damage." />
+
+    <ImageView
+        android:id="@+id/enemy"
+        android:layout_width="@dimen/entity_width"
+        android:layout_height="@dimen/entity_height"
+        android:src="@drawable/cultist" />
+
+    <TextView
+        android:id="@+id/enemy_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="40/50 HP" />
+
+    <TextView
+        android:id="@+id/enemy_status_effects"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Weakened (2)" />
+
+</LinearLayout>

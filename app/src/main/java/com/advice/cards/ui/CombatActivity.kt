@@ -1,8 +1,13 @@
-package com.advice.cards
+package com.advice.cards.ui
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.get
+import com.advice.cards.Card
+import com.advice.cards.GameManager
+import com.advice.cards.R
+import com.advice.cards.RewardsActivity
 import com.advice.cards.logger.CombatLogger
 import kotlinx.android.synthetic.main.activity_combat.*
 
@@ -71,15 +76,20 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
         // hero
 
         energy.text = "${self.getCurrentEnergy()}/${self.getMaxEnergy()}"
-        hero.setImageResource(self.image)
-        hero_text.text = self.toString()
+        hero.render(GameManager.hero)
         deck_size.text = self.deck.toString()
 
         // enemy
-
-        enemy_text.text = target.toString()
-        enemy.setImageResource(target.image)
-        enemy_intent.text = target.intent.getDescription(target, self)
+        if (enemies.childCount == 0) {
+            encounter.enemies.forEach {
+                val view = EntityView(this, it)
+                enemies.addView(view)
+            }
+        } else {
+            encounter.enemies.forEachIndexed { index, enemy ->
+                (enemies.get(index) as EntityView).render(enemy)
+            }
+        }
 
         // general
         combat_log.text = CombatLogger.toString()

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.advice.cards.enemies.Cultist
 import com.advice.cards.enemies.JawWorm
+import com.advice.cards.ui.CombatActivity
+import com.advice.cards.ui.DeckCardView
 import kotlinx.android.synthetic.main.activity_rewards.*
 
 class RewardsActivity : Activity(), DeckCardView.OnCardSelected {
