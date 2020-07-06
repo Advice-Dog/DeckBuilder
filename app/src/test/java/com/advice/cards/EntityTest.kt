@@ -63,7 +63,7 @@ class EntityTest {
     @Test
     fun `get scaled damage with one strength stack`() {
         val self = Entity(10)
-        self.applyStatusEffect(FlexBuff(1))
+        self.applyStatusEffect(FlexBuff(2))
 
         val entity = Entity(10)
 
@@ -75,8 +75,8 @@ class EntityTest {
     @Test
     fun `get scaled damage with two strength stacks`() {
         val self = Entity(10)
-        self.applyStatusEffect(FlexBuff(1))
-        self.applyStatusEffect(FlexBuff(1))
+        self.applyStatusEffect(FlexBuff(2))
+        self.applyStatusEffect(FlexBuff(2))
 
         val entity = Entity(10)
 
@@ -88,7 +88,7 @@ class EntityTest {
     @Test
     fun `get scaled damage with one strength stack and vulnerable`() {
         val self = Entity(10)
-        self.applyStatusEffect(FlexBuff(1))
+        self.applyStatusEffect(FlexBuff(2))
 
         val entity = Entity(10)
         entity.applyStatusEffect(Vulnerable(1))
