@@ -1,11 +1,16 @@
 package com.advice.cards
 
 import androidx.annotation.CallSuper
+import com.advice.cards.enemies.Ritual
 import com.advice.cards.logger.CombatLogger
 import com.advice.cards.red.attack.Strike
+import com.advice.cards.status.FlexBuff
 import com.advice.cards.status.StatusEffect
+import com.advice.cards.status.Vulnerable
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 open class Entity(
     private val maxHp: Int
@@ -44,6 +49,8 @@ open class Entity(
 
     fun healDamage(amount: Int) {
         CombatLogger.onMessage("${this.javaClass.simpleName} heals for $amount.")
+        // todo: actually heal
+        hp = maxHp
     }
 
     fun addBlock(amount: Int) {
@@ -66,7 +73,17 @@ open class Entity(
 
     fun getBlock() = armor
 
-    fun getStrength() = strength
+    fun getStrength(): Int {
+        // cultist
+        val ritual = statusEffects.find { it is Ritual }
+        if (ritual != null) {
+            val i = abs(ritual.getStacks()) - 1
+            return i * 3
+        }
+
+        val strength = statusEffects.count { it is FlexBuff }
+        return strength * 2  // 2 strength per stack
+    }
 
     fun getAgility() = agility
     fun getHealth() = hp
@@ -75,11 +92,24 @@ open class Entity(
     open fun endTurn() {
         clearBlock()
 
+    }
+
+    fun tick() {
         statusEffects.forEach {
             it.tick()
         }
 
         statusEffects.removeAll { it.hasExpired() }
+    }
+
+    fun getScaledDamage(entity: Entity, damage: Int): Int {
+        val base = damage + entity.getStrength()
+
+        val isVulnerable = statusEffects.any { it is Vulnerable }
+        if (isVulnerable) {
+            return (base * 1.5f).roundToInt()
+        }
+        return base
     }
 
 }
@@ -121,5 +151,6 @@ abstract class Enemy(maxHp: Int = 15) : Entity(maxHp) {
     open fun play(target: Entity, self: Entity) {
         hand.first().play(self, target)
     }
+
 
 }

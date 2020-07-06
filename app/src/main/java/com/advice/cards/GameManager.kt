@@ -1,6 +1,6 @@
 package com.advice.cards
 
-import com.advice.cards.enemies.JawWorm
+import com.advice.cards.enemies.Cultist
 import com.advice.cards.hero.Ironclad
 import com.advice.cards.red.attack.*
 import com.advice.cards.red.skill.Flex
@@ -33,7 +33,13 @@ object GameManager {
 
     init {
         encounter = Encounter(hero)
-        encounter?.reset(JawWorm())
+        encounter?.reset(Cultist())
+
+
+        val bonus = redCards.shuffled().take(5)
+        deck.addCards(bonus)
+        //deck.addCard(Anger())
+        //deck.addCard(Anger())
     }
 
     fun setEnemy(enemy: Enemy) {

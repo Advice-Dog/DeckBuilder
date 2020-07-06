@@ -1,16 +1,15 @@
 package com.advice.cards.red.attack
 
-import com.advice.cards.*
+import com.advice.cards.Card
+import com.advice.cards.CardType
+import com.advice.cards.DamageEffect
+import com.advice.cards.TargetType
 
 class Strike : Card(CardType.ATTACK, TargetType.ENEMY) {
 
     private val damage = 5
 
-    override val description: String
-        get() = "Deal $damage damage."
-
-    override fun play(self: Entity, entity: Entity) {
-        entity.dealDamage(damage)
+    init {
+        effects.add(DamageEffect(damage))
     }
-
 }

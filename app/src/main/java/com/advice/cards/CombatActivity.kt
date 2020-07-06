@@ -48,6 +48,8 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
         val currentHand = deck.hand
         currentHand.forEach {
             val view = DeckCardView(this, it, this)
+            view.render(encounter.hero, encounter.target)
+
             hand.addView(view)
         }
     }
@@ -63,15 +65,21 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
     }
 
     private fun updateEntities() {
+        val self = encounter.hero
+        val target = encounter.target
+
         // hero
-        energy.text = "${encounter.hero.getCurrentEnergy()}/${encounter.hero.getMaxEnergy()}"
-        hero.setImageResource(encounter.hero.image)
-        hero_text.text = encounter.hero.toString()
+
+        energy.text = "${self.getCurrentEnergy()}/${self.getMaxEnergy()}"
+        hero.setImageResource(self.image)
+        hero_text.text = self.toString()
+        deck_size.text = self.deck.toString()
 
         // enemy
-        enemy_text.text = encounter.target.toString()
-        enemy.setImageResource(encounter.target.image)
-        enemy_intent.text = encounter.target.intent.toString()
+
+        enemy_text.text = target.toString()
+        enemy.setImageResource(target.image)
+        enemy_intent.text = target.intent.getDescription(target, self)
 
         // general
         combat_log.text = CombatLogger.toString()

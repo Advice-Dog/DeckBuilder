@@ -49,6 +49,8 @@ class Encounter(val hero: Hero = Hero(), val logger: BaseLogger = BaseLogger()) 
 
         target.play(hero, target)
 
+        target.tick()
+
         hero.endTurn()
 
         turnCounter++
@@ -63,6 +65,8 @@ class Encounter(val hero: Hero = Hero(), val logger: BaseLogger = BaseLogger()) 
     }
 
     fun reset(enemy: Enemy) {
+        hero.healDamage(100)
+
         target = enemy
         enemies.clear()
         enemies.add(target)

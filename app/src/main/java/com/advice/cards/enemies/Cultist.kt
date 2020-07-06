@@ -36,15 +36,21 @@ class DarkStrike : Card(CardType.ATTACK, TargetType.ENEMY) {
 
     private val damage = 6
 
+    private val effect = DamageEffect(damage)
+
+    init {
+        effects.add(effect)
+    }
+
     override val description: String
-        get() = "Deal $damage damage."
+        get() = effect.toString()
 
     override fun play(self: Entity, entity: Entity) {
-        entity.dealDamage(damage)
+        effects.forEach { it.apply(self, entity) }
     }
 }
 
-class Ritual(private val amount: Int) : StatusEffect(-1) {
+class Ritual(private val amount: Int) : StatusEffect(0) {
 
 
 }

@@ -74,5 +74,9 @@ class Deck(val cards: List<Card> = emptyList()) {
         deck.shuffle()
     }
 
+    override fun toString(): String {
+        return "${deck.size} (${draw.size}/${discard.size})"
+    }
+
 
 }
