@@ -53,4 +53,5 @@ class DarkStrike : Card(CardType.ATTACK, TargetType.ENEMY) {
 class Ritual(private val amount: Int) : StatusEffect(0) {
 
 
+
 }

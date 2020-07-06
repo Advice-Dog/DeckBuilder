@@ -7,8 +7,11 @@ import com.advice.cards.red.skill.Armaments
 import com.advice.cards.red.skill.Flex
 import com.advice.cards.red.skill.ShrugItOff
 import com.advice.cards.red.skill.TrueGrit
+import java.util.*
 
 object GameManager {
+
+    val seed = Random(1024L)
 
     private val redCards = listOf(
         Anger(),
@@ -39,7 +42,7 @@ object GameManager {
         encounter?.reset(Cultist())
 
 
-        val bonus = redCards.shuffled().take(5)
+        val bonus = redCards.shuffled(seed).take(5)
         //deck.addCards(bonus)
         //deck.addCard(Thunderclap())
         //deck.addCard(Anger())
@@ -63,7 +66,7 @@ object GameManager {
     }
 
     fun getCardRewards(): List<Card> {
-        return redCards.shuffled().take(3)
+        return redCards.shuffled(seed).take(3)
     }
 
 

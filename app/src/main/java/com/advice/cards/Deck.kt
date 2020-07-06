@@ -1,5 +1,9 @@
 package com.advice.cards
 
+import com.advice.cards.logger.CombatLogger
+import java.util.*
+import kotlin.collections.ArrayList
+
 class Deck(val cards: List<Card> = emptyList()) {
 
     private val deck = ArrayList<Card>()
@@ -25,11 +29,11 @@ class Deck(val cards: List<Card> = emptyList()) {
     }
 
     fun shuffle() {
-        deck.shuffle()
+        deck.shuffle(GameManager.seed)
     }
 
     fun startCombat() {
-        deck.shuffle()
+        deck.shuffle(GameManager.seed)
         draw.addAll(deck)
         drawCard(5)
     }
@@ -52,13 +56,14 @@ class Deck(val cards: List<Card> = emptyList()) {
     }
 
     fun exhaustCard(card: Card) {
+        CombatLogger.onMessage("${card.name} has been exhausted.")
         hand.remove(card)
         exhaust.add(card)
     }
 
     fun shuffleDiscardIntoDraw() {
         draw.addAll(discard)
-        draw.shuffle()
+        draw.shuffle(GameManager.seed)
         discard.clear()
     }
 
@@ -78,7 +83,7 @@ class Deck(val cards: List<Card> = emptyList()) {
 
     fun addCards(cards: List<Card>) {
         deck.addAll(cards)
-        deck.shuffle()
+        deck.shuffle(GameManager.seed)
     }
 
     override fun toString(): String {
