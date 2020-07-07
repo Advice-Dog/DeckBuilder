@@ -6,11 +6,15 @@ import com.advice.cards.enemies.group
 import com.advice.cards.hero.Ironclad
 import com.advice.cards.red.attack.*
 import com.advice.cards.red.skill.*
-import java.util.*
+import kotlin.random.Random
 
 object GameManager {
 
-    val seed = Random(1024L)
+    var seed = Random(1024L)
+
+    fun resetSeed() {
+        seed = Random(1024L)
+    }
 
     private val redCards = listOf(
         Anger(),
@@ -78,7 +82,7 @@ object GameManager {
         this.encounter = null
     }
 
-    fun getCardRewards(): List<Card> {
+    fun getCardRewards(seed: Random = this.seed): List<Card> {
         val index = seed.nextInt(100)
         val rarity = getRewardRarity(index)
 

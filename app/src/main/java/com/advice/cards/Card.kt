@@ -209,6 +209,10 @@ class BlockDamageEffect : Effect() {
         val amount = getScaledValue(self, target)
         target.dealDamage(amount)
     }
+
+    override fun toString(): String {
+        return "Deal damage equal to your Block."
+    }
 }
 
 class ApplyStatusEffectEffect(

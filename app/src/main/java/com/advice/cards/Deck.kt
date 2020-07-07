@@ -1,8 +1,6 @@
 package com.advice.cards
 
 import com.advice.cards.logger.CombatLogger
-import java.util.*
-import kotlin.collections.ArrayList
 
 class Deck(val cards: List<Card> = emptyList()) {
 
@@ -91,13 +89,20 @@ class Deck(val cards: List<Card> = emptyList()) {
     }
 
     override fun toString(): String {
-        return "${deck.size} (${draw.size}/${discard.size})"
+        return "${deck.size}: ${deck.joinToString { it.name }}"
     }
 
     fun play(card: Card) {
         // todo: add in other logic for post-play
         discardCard(card)
     }
+
+    fun setCards(cards: List<Card>) {
+        deck.clear()
+        deck.addAll(cards)
+    }
+
+
 
 
 }

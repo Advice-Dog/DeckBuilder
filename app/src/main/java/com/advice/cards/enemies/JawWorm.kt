@@ -11,17 +11,17 @@ class JawWorm : Enemy(40) {
         Thrash()
     )
 
-    override var intent = cards.random()
+    override var intent = cards.random(GameManager.seed)
 
     override fun play(target: Entity, self: Entity) {
         intent.play(self, target)
-        intent = cards.random()
+        intent = cards.random(GameManager.seed)
     }
 }
 
 class Chomp : Card(CardType.ATTACK, TargetType.ENEMY) {
 
-    private val damage = 11
+    private val damage = 6
 
     override val description: String
         get() = "Deal $damage damage."
@@ -33,7 +33,7 @@ class Chomp : Card(CardType.ATTACK, TargetType.ENEMY) {
 
 class Thrash : Card(CardType.ATTACK, TargetType.ENEMY) {
 
-    private val damage = 7
+    private val damage = 3
     private val block = 5
 
     override val description: String

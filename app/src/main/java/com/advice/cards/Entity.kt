@@ -165,5 +165,8 @@ abstract class Enemy(maxHp: Int = 15) : Entity(maxHp) {
         hand.first().play(self, target)
     }
 
+    override fun toString(): String {
+        return super.toString() + " (" + intent.toString() + ")"
+    }
 
 }

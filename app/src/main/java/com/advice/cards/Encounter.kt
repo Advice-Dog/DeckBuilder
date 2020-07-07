@@ -11,7 +11,7 @@ class Encounter(enemyGroup: EnemyGroup) {
 
     val enemies = ArrayList<Enemy>()
 
-    private var turnCounter = 1
+    var turnCounter = 1
 
     val isComplete: Boolean
         get() = enemies.none { it.isAlive } || hero.isDead
@@ -61,9 +61,9 @@ class Encounter(enemyGroup: EnemyGroup) {
     fun onTurnEnd() {
         // clear any block
         target.endTurn()
-
-        target.play(hero, target)
-
+        if (target.isAlive) {
+            target.play(hero, target)
+        }
         // remove any buffs
         target.tick()
     }
