@@ -136,7 +136,16 @@ open class Hero(val deck: Deck = Deck()) : Entity(50) {
         deck.endTurn()
     }
 
-    fun startTurn() {
+    fun start() {
+        deck.startCombat()
+        onTurn()
+    }
+
+    fun end() {
+        deck.endCombat()
+    }
+
+    fun onTurn() {
         energy = maxEnergy
     }
 

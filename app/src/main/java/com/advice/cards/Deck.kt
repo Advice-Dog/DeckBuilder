@@ -6,6 +6,10 @@ import kotlin.collections.ArrayList
 
 class Deck(val cards: List<Card> = emptyList()) {
 
+    companion object {
+        private const val DRAW_AMOUNT = 4
+    }
+
     private val deck = ArrayList<Card>()
 
     val hand = ArrayList<Card>()
@@ -35,7 +39,7 @@ class Deck(val cards: List<Card> = emptyList()) {
     fun startCombat() {
         deck.shuffle(GameManager.seed)
         draw.addAll(deck)
-        drawCard(5)
+        drawCard(DRAW_AMOUNT)
     }
 
     fun drawCard(count: Int) {
@@ -71,7 +75,7 @@ class Deck(val cards: List<Card> = emptyList()) {
         discard.addAll(hand)
         hand.clear()
 
-        drawCard(5)
+        drawCard(DRAW_AMOUNT)
     }
 
     fun endCombat() {
@@ -88,6 +92,11 @@ class Deck(val cards: List<Card> = emptyList()) {
 
     override fun toString(): String {
         return "${deck.size} (${draw.size}/${discard.size})"
+    }
+
+    fun play(card: Card) {
+        // todo: add in other logic for post-play
+        discardCard(card)
     }
 
 

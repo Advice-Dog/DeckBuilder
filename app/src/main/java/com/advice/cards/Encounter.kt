@@ -1,78 +1,77 @@
 package com.advice.cards
 
 import com.advice.cards.TargetType.*
-import com.advice.cards.enemies.JawWorm
-import com.advice.cards.logger.BaseLogger
+import com.advice.cards.enemies.EnemyGroup
 import com.advice.cards.logger.CombatLogger
 
-class Encounter(val hero: Hero = Hero(), val logger: BaseLogger = BaseLogger()) {
+class Encounter(enemyGroup: EnemyGroup) {
 
-    var target: Enemy = JawWorm()
+    private val hero = GameManager.hero
+    private val deck = hero.deck
 
-    val enemies = mutableListOf(target)
+    val enemies = ArrayList<Enemy>()
 
     private var turnCounter = 1
-
-    init {
-        hero.deck.shuffle()
-
-        CombatLogger.onMessage("Turn $turnCounter")
-    }
 
     val isComplete: Boolean
         get() = enemies.none { it.isAlive } || hero.isDead
 
-    fun playCard(card: Card) {
-        if (!card.canPlay(hero)) {
-            logger.onMessage("Cannot use ${card.name}.")
-            return
-        }
+    // todo: remove
+    val target: Enemy
+        get() = enemies.firstOrNull { it.isAlive } ?: enemies.first()
 
-        logger.onMessage("Playing $card")
+    init {
+        enemies.addAll(enemyGroup.enemies)
+    }
 
+    fun play(card: Card) {
         hero.useEnergy(card.energy)
 
-        for (i in 1..card.count) {
-            when (card.target) {
-                SELF -> card.play(hero, target)
-                ENEMY -> card.play(hero, target)
-                ALL_ENEMY -> enemies.forEach { card.play(hero, it) }
-                RANDOM_ENEMY -> TODO()
-            }
+        when (card.target) {
+            SELF -> card.play(hero, target)
+            ENEMY -> card.play(hero, target)
+            ALL_ENEMY -> enemies.forEach { card.play(hero, it) }
+            RANDOM_ENEMY -> card.play(hero, enemies.random())
         }
 
-        hero.deck.discardCard(card)
+        deck.play(card)
     }
 
     fun endTurn() {
+        onTurnEnd()
+
+        hero.endTurn()
+
+        onTurnStart()
+    }
+
+    fun onEncounterStart() {
+        hero.start()
+    }
+
+    fun onTurnStart() {
+        CombatLogger.onMessage("Turn ${turnCounter++}")
+        hero.onTurn()
+    }
+
+    fun onTurnEnd() {
+        // clear any block
         target.endTurn()
 
         target.play(hero, target)
 
+        // remove any buffs
         target.tick()
-
-        hero.endTurn()
-
-        turnCounter++
-        CombatLogger.onMessage("Turn $turnCounter")
-
-        hero.startTurn()
-    }
-
-    fun start() {
-        hero.startTurn()
-        hero.deck.startCombat()
     }
 
     fun reset(enemy: Enemy) {
         hero.healDamage(100)
 
-        target = enemy
         enemies.clear()
         enemies.add(target)
     }
 
-    fun end() {
-        hero.deck.endCombat()
+    fun onEncounterEnd() {
+        hero.end()
     }
 }

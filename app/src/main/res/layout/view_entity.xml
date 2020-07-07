@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="32dp">
 
     <TextView
         android:id="@+id/enemy_intent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        tools:text="Deal 11 damage." />
+        android:lines="4"
+        tools:text="Deal 11 damage, gain 5 shield" />
 
     <ImageView
         android:id="@+id/enemy"

@@ -7,4 +7,5 @@
     <!--  Cards  -->
     <color name="red_background">#b04c4c</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

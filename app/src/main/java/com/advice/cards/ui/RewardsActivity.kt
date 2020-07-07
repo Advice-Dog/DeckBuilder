@@ -1,12 +1,14 @@
-package com.advice.cards
+package com.advice.cards.ui
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import com.advice.cards.Card
+import com.advice.cards.GameManager
+import com.advice.cards.R
 import com.advice.cards.enemies.Cultist
 import com.advice.cards.enemies.JawWorm
-import com.advice.cards.ui.CombatActivity
-import com.advice.cards.ui.DeckCardView
+import com.advice.cards.enemies.group
 import kotlinx.android.synthetic.main.activity_rewards.*
 
 class RewardsActivity : Activity(), DeckCardView.OnCardSelected {
@@ -25,12 +27,17 @@ class RewardsActivity : Activity(), DeckCardView.OnCardSelected {
     override fun onCardSelected(card: Card) {
         GameManager.deck.addCard(card)
 
-        val enemies = listOf(
-            Cultist(),
-            JawWorm()
+        val groups = listOf(
+            group {
+                this + Cultist()
+            },
+            group {
+                this + JawWorm()
+                this + JawWorm()
+            }
         )
 
-        GameManager.setEnemy(enemies.random())
+        GameManager.setEnemyGroup(groups.random())
 
         val intent = Intent(this, CombatActivity::class.java)
         startActivity(intent)

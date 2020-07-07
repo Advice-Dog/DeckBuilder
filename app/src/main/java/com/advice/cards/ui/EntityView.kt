@@ -22,7 +22,12 @@ class EntityView : FrameLayout {
     }
 
     constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
-        this.entity = Cultist()
+        if (isInEditMode) {
+            this.entity = Cultist()
+        } else {
+            this.entity = GameManager.hero
+        }
+
         View.inflate(context, R.layout.view_entity, this)
         render()
     }

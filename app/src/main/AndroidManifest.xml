@@ -20,7 +20,7 @@
 
         </activity>
 
-        <activity android:name=".RewardsActivity" />
+        <activity android:name=".ui.RewardsActivity" />
 
     </application>
 

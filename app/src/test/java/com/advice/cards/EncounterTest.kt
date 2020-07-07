@@ -20,7 +20,7 @@ class EncounterTest {
         val encounter = Encounter()
         val card = Strike()
 
-        encounter.playCard(card)
+        encounter.play(card)
 
         assert(encounter.hero.isAlive)
         assert(encounter.target.isDead)
@@ -43,7 +43,7 @@ class EncounterTest {
         val encounter = Encounter()
         val card = Defend()
 
-        encounter.playCard(card)
+        encounter.play(card)
         encounter.endTurn()
 
         assert(encounter.hero.isAlive)

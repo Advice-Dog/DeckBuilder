@@ -7,7 +7,6 @@ import androidx.core.view.get
 import com.advice.cards.Card
 import com.advice.cards.GameManager
 import com.advice.cards.R
-import com.advice.cards.RewardsActivity
 import com.advice.cards.logger.CombatLogger
 import kotlinx.android.synthetic.main.activity_combat.*
 
@@ -15,7 +14,7 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
 
 
     private val encounter = GameManager.encounter!!
-    private val deck = encounter.hero.deck
+    private val deck = GameManager.hero.deck
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +31,14 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
             }
         }
 
-        encounter.start()
+        encounter.onEncounterStart()
 
         drawHand()
         updateEntities()
     }
 
     private fun onEncounterComplete() {
-        encounter.end()
+        encounter.onEncounterEnd()
         CombatLogger.onMessage("Encounter is COMPLETE.")
         CombatLogger.reset()
 
@@ -53,14 +52,19 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
         val currentHand = deck.hand
         currentHand.forEach {
             val view = DeckCardView(this, it, this)
-            view.render(encounter.hero, encounter.target)
+            view.render(GameManager.hero, encounter.target)
 
             hand.addView(view)
         }
     }
 
     override fun onCardSelected(card: Card) {
-        encounter.playCard(card)
+        if (!card.canPlay(GameManager.hero)) {
+            CombatLogger.onMessage("Cannot use ${card.name}.")
+            return
+        }
+
+        encounter.play(card)
         drawHand()
         updateEntities()
 
@@ -70,7 +74,7 @@ class CombatActivity : Activity(), DeckCardView.OnCardSelected {
     }
 
     private fun updateEntities() {
-        val self = encounter.hero
+        val self = GameManager.hero
         val target = encounter.target
 
         // hero

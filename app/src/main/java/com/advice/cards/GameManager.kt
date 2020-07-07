@@ -1,6 +1,8 @@
 package com.advice.cards
 
 import com.advice.cards.enemies.Cultist
+import com.advice.cards.enemies.EnemyGroup
+import com.advice.cards.enemies.group
 import com.advice.cards.hero.Ironclad
 import com.advice.cards.red.attack.*
 import com.advice.cards.red.skill.*
@@ -43,8 +45,9 @@ object GameManager {
     var encounter: Encounter? = null
 
     init {
-        encounter = Encounter(hero)
-        encounter?.reset(Cultist())
+        encounter = Encounter(group {
+            this + Cultist()
+        })
 
 
         val bonus = redCards.shuffled(seed).take(5)
@@ -57,9 +60,14 @@ object GameManager {
     }
 
     fun setEnemy(enemy: Enemy) {
-        val encounter = Encounter(hero)
-        encounter.reset(enemy)
+        val encounter = Encounter(group {
+            this + enemy
+        })
         this.encounter = encounter
+    }
+
+    fun setEnemyGroup(enemyGroup: EnemyGroup) {
+        this.encounter = Encounter(enemyGroup)
     }
 
     fun startNewEncounter(encounter: Encounter) {
