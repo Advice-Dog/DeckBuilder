@@ -43,8 +43,6 @@ open class Entity(
         }
 
         hp = max(hp, 0)
-
-        println(this)
     }
 
     fun healDamage(amount: Int) {
@@ -111,6 +109,7 @@ open class Entity(
         return base
     }
 
+    fun getMaxHealth() = 50
 
 
 }

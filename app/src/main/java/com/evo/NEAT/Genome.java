@@ -2,7 +2,6 @@ package com.evo.NEAT;
 
 import com.evo.NEAT.com.evo.NEAT.config.NEAT_Config;
 
-import javax.management.RuntimeErrorException;
 import java.io.*;
 import java.util.*;
 
@@ -357,7 +356,7 @@ public class Genome implements Comparable {
         }
 
         if (node1 < 0 || node2 < 0)
-            throw new RuntimeErrorException(null);          // TODO Pool.newInnovation(node1, node2)
+            throw new RuntimeException();          // TODO Pool.newInnovation(node1, node2)
         connectionGeneList.add(new ConnectionGene(node1, node2, InnovationCounter.newInnovation(), 4 * rand.nextFloat() - 2, true));                // Add innovation and weight
 
     }

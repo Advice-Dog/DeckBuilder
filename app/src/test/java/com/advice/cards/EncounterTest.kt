@@ -1,14 +1,20 @@
 package com.advice.cards
 
+import com.advice.cards.enemies.JawWorm
+import com.advice.cards.enemies.group
 import com.advice.cards.red.skill.Defend
 import com.advice.cards.red.attack.Strike
 import org.junit.Test
 
 class EncounterTest {
 
+    private val group = group {
+        this + JawWorm()
+    }
+
     @Test
     fun `is not complete at start`() {
-        val encounter = Encounter()
+        val encounter = Encounter(group)
 
         assert(encounter.hero.isAlive)
         assert(encounter.target.isAlive)
@@ -17,7 +23,7 @@ class EncounterTest {
 
     @Test
     fun `kill target and is complete`() {
-        val encounter = Encounter()
+        val encounter = Encounter(group)
         val card = Strike()
 
         encounter.play(card)
@@ -29,7 +35,7 @@ class EncounterTest {
 
     @Test
     fun `end turn and take damage`() {
-        val encounter = Encounter()
+        val encounter = Encounter(group)
 
         encounter.endTurn()
 
@@ -40,7 +46,7 @@ class EncounterTest {
 
     @Test
     fun `add armor and end turn and take no damage`() {
-        val encounter = Encounter()
+        val encounter = Encounter(group)
         val card = Defend()
 
         encounter.play(card)

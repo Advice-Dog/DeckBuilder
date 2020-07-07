@@ -190,6 +190,10 @@ class BlockEffect(private val amount: Int) : Effect() {
     override fun apply(self: Entity, target: Entity) {
         self.addBlock(getScaledValue(self, target))
     }
+
+    override fun toString(): String {
+        return "Gain $amount Block."
+    }
 }
 
 class BlockDamageEffect : Effect() {
@@ -224,6 +228,10 @@ class ApplyStatusEffectEffect(
         } else {
             self.applyStatusEffect(effect)
         }
+    }
+
+    override fun toString(): String {
+        return effect.toString()
     }
 }
 

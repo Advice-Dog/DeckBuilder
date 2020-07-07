@@ -6,7 +6,7 @@ import com.advice.cards.logger.CombatLogger
 
 class Encounter(enemyGroup: EnemyGroup) {
 
-    private val hero = GameManager.hero
+    var hero: Hero = GameManager.hero
     private val deck = hero.deck
 
     val enemies = ArrayList<Enemy>()
@@ -22,6 +22,10 @@ class Encounter(enemyGroup: EnemyGroup) {
 
     init {
         enemies.addAll(enemyGroup.enemies)
+    }
+
+    fun setPlayer(hero: Hero) {
+        this.hero = hero
     }
 
     fun play(card: Card) {
