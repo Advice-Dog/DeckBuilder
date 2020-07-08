@@ -1,9 +1,17 @@
 package com.evo.NEAT;
 
-import com.evo.NEAT.com.evo.NEAT.config.NEAT_Config;
+import com.evo.NEAT.config.NEAT_Config;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Created by vishnughosh on 28/02/17.
@@ -29,6 +37,7 @@ public class Genome implements Comparable {
         DISABLE_MUTATION_CHANCE,
         ENABLE_MUTATION_CHANCE
     }
+
     /*    private class MutationRates{
             float STEPS;
             float PERTURB_CHANCE;
@@ -52,22 +61,22 @@ public class Genome implements Comparable {
                 this.ENABLE_MUTATION_CHANCE = NEAT_Config.ENABLE_MUTATION_CHANCE;
             }
         }*/
-    public Genome(){
+    public Genome() {
 
         this.mutationRates.put(MutationKeys.STEPS, NEAT_Config.STEPS);
         this.mutationRates.put(MutationKeys.PERTURB_CHANCE, NEAT_Config.PERTURB_CHANCE);
-        this.mutationRates.put(MutationKeys.WEIGHT_CHANCE,NEAT_Config.WEIGHT_CHANCE);
+        this.mutationRates.put(MutationKeys.WEIGHT_CHANCE, NEAT_Config.WEIGHT_CHANCE);
         this.mutationRates.put(MutationKeys.WEIGHT_MUTATION_CHANCE, NEAT_Config.WEIGHT_MUTATION_CHANCE);
-        this.mutationRates.put(MutationKeys.NODE_MUTATION_CHANCE , NEAT_Config.NODE_MUTATION_CHANCE);
-        this.mutationRates.put(MutationKeys.CONNECTION_MUTATION_CHANCE , NEAT_Config.CONNECTION_MUTATION_CHANCE);
-        this.mutationRates.put(MutationKeys.BIAS_CONNECTION_MUTATION_CHANCE , NEAT_Config.BIAS_CONNECTION_MUTATION_CHANCE);
-        this.mutationRates.put(MutationKeys.DISABLE_MUTATION_CHANCE , NEAT_Config.DISABLE_MUTATION_CHANCE);
-        this.mutationRates.put(MutationKeys.ENABLE_MUTATION_CHANCE , NEAT_Config.ENABLE_MUTATION_CHANCE);
+        this.mutationRates.put(MutationKeys.NODE_MUTATION_CHANCE, NEAT_Config.NODE_MUTATION_CHANCE);
+        this.mutationRates.put(MutationKeys.CONNECTION_MUTATION_CHANCE, NEAT_Config.CONNECTION_MUTATION_CHANCE);
+        this.mutationRates.put(MutationKeys.BIAS_CONNECTION_MUTATION_CHANCE, NEAT_Config.BIAS_CONNECTION_MUTATION_CHANCE);
+        this.mutationRates.put(MutationKeys.DISABLE_MUTATION_CHANCE, NEAT_Config.DISABLE_MUTATION_CHANCE);
+        this.mutationRates.put(MutationKeys.ENABLE_MUTATION_CHANCE, NEAT_Config.ENABLE_MUTATION_CHANCE);
     }
 
     public Genome(Genome child) {
 
-        for (ConnectionGene c:child.connectionGeneList){
+        for (ConnectionGene c : child.connectionGeneList) {
             this.connectionGeneList.add(new ConnectionGene(c));
         }
 
@@ -96,8 +105,8 @@ public class Genome implements Comparable {
         this.connectionGeneList = connectionGeneList;
     }
 
-    public static Genome crossOver(Genome parent1, Genome parent2){
-        if(parent1.fitness < parent2.fitness){
+    public static Genome crossOver(Genome parent1, Genome parent2) {
+        if (parent1.fitness < parent2.fitness) {
             Genome temp = parent1;
             parent1 = parent2;
             parent2 = temp;
@@ -107,13 +116,13 @@ public class Genome implements Comparable {
         TreeMap<Integer, ConnectionGene> geneMap1 = new TreeMap<>();
         TreeMap<Integer, ConnectionGene> geneMap2 = new TreeMap<>();
 
-        for(ConnectionGene con: parent1.connectionGeneList){
-            assert  !geneMap1.containsKey(con.getInnovation());             //TODO Remove for better performance
+        for (ConnectionGene con : parent1.connectionGeneList) {
+            assert !geneMap1.containsKey(con.getInnovation());             //TODO Remove for better performance
             geneMap1.put(con.getInnovation(), con);
         }
 
-        for(ConnectionGene con: parent2.connectionGeneList){
-            assert  !geneMap2.containsKey(con.getInnovation());             //TODO Remove for better performance
+        for (ConnectionGene con : parent2.connectionGeneList) {
+            assert !geneMap2.containsKey(con.getInnovation());             //TODO Remove for better performance
             geneMap2.put(con.getInnovation(), con);
         }
 
@@ -123,34 +132,34 @@ public class Genome implements Comparable {
         Set<Integer> allInnovations = new HashSet<Integer>(innovationP1);
         allInnovations.addAll(innovationP2);
 
-        for(int key : allInnovations){
+        for (int key : allInnovations) {
             ConnectionGene trait;
 
-            if(geneMap1.containsKey(key) && geneMap2.containsKey(key)){
-                if(rand.nextBoolean()){
+            if (geneMap1.containsKey(key) && geneMap2.containsKey(key)) {
+                if (rand.nextBoolean()) {
                     trait = new ConnectionGene(geneMap1.get(key));
-                }else {
+                } else {
                     trait = new ConnectionGene(geneMap2.get(key));
                 }
 
-                if((geneMap1.get(key).isEnabled()!=geneMap2.get(key).isEnabled())){
-                    if( (rand.nextFloat()<0.75f ))
+                if ((geneMap1.get(key).isEnabled() != geneMap2.get(key).isEnabled())) {
+                    if ((rand.nextFloat() < 0.75f))
                         trait.setEnabled(false);
                     else
                         trait.setEnabled(true);
                 }
 
-            }else if(parent1.getFitness()==parent2.getFitness()){               // disjoint or excess and equal fitness
-                if(geneMap1.containsKey(key))
+            } else if (parent1.getFitness() == parent2.getFitness()) {               // disjoint or excess and equal fitness
+                if (geneMap1.containsKey(key))
                     trait = geneMap1.get(key);
                 else
                     trait = geneMap2.get(key);
 
-                if(rand.nextBoolean()){
+                if (rand.nextBoolean()) {
                     continue;
                 }
 
-            }else
+            } else
                 trait = geneMap1.get(key);
 
 
@@ -163,7 +172,7 @@ public class Genome implements Comparable {
     }
 
 
-    public static boolean isSameSpecies(Genome g1, Genome g2){
+    public static boolean isSameSpecies(Genome g1, Genome g2) {
         TreeMap<Integer, ConnectionGene> geneMap1 = new TreeMap<>();
         TreeMap<Integer, ConnectionGene> geneMap2 = new TreeMap<>();
 
@@ -174,19 +183,19 @@ public class Genome implements Comparable {
         int lowMaxInnovation;
         float delta = 0;
 
-        for(ConnectionGene con: g1.connectionGeneList) {
-            assert  !geneMap1.containsKey(con.getInnovation());             //TODO Remove for better performance
+        for (ConnectionGene con : g1.connectionGeneList) {
+            assert !geneMap1.containsKey(con.getInnovation());             //TODO Remove for better performance
             geneMap1.put(con.getInnovation(), con);
         }
 
-        for(ConnectionGene con: g2.connectionGeneList) {
-            assert  !geneMap2.containsKey(con.getInnovation());             //TODO Remove for better performance
+        for (ConnectionGene con : g2.connectionGeneList) {
+            assert !geneMap2.containsKey(con.getInnovation());             //TODO Remove for better performance
             geneMap2.put(con.getInnovation(), con);
         }
-        if(geneMap1.isEmpty() || geneMap2.isEmpty())
+        if (geneMap1.isEmpty() || geneMap2.isEmpty())
             lowMaxInnovation = 0;
         else
-            lowMaxInnovation = Math.min(geneMap1.lastKey(),geneMap2.lastKey());
+            lowMaxInnovation = Math.min(geneMap1.lastKey(), geneMap2.lastKey());
 
         Set<Integer> innovationP1 = geneMap1.keySet();
         Set<Integer> innovationP2 = geneMap2.keySet();
@@ -194,15 +203,15 @@ public class Genome implements Comparable {
         Set<Integer> allInnovations = new HashSet<Integer>(innovationP1);
         allInnovations.addAll(innovationP2);
 
-        for(int key : allInnovations){
+        for (int key : allInnovations) {
 
-            if(geneMap1.containsKey(key) && geneMap2.containsKey(key)){
-                matching ++;
+            if (geneMap1.containsKey(key) && geneMap2.containsKey(key)) {
+                matching++;
                 weight += Math.abs(geneMap1.get(key).getWeight() - geneMap2.get(key).getWeight());
-            }else {
-                if(key < lowMaxInnovation){
+            } else {
+                if (key < lowMaxInnovation) {
                     disjoint++;
-                }else{
+                } else {
                     excess++;
                 }
             }
@@ -211,9 +220,9 @@ public class Genome implements Comparable {
 
         //System.out.println("matching : "+matching + "\ndisjoint : "+ disjoint + "\nExcess : "+ excess +"\nWeight : "+ weight);
 
-        int N = matching+disjoint+excess ;
+        int N = matching + disjoint + excess;
 
-        if(N>0)
+        if (N > 0)
             delta = (NEAT_Config.EXCESS_COEFFICENT * excess + NEAT_Config.DISJOINT_COEFFICENT * disjoint) / N + (NEAT_Config.WEIGHT_COEFFICENT * weight) / matching;
 
         return delta < NEAT_Config.COMPATIBILITY_THRESHOLD;
@@ -285,10 +294,10 @@ public class Genome implements Comparable {
     public void Mutate() {
         // Mutate mutation rates
         for (Map.Entry<MutationKeys, Float> entry : mutationRates.entrySet()) {
-            if(rand.nextBoolean())
-                mutationRates.put(entry.getKey(), 0.95f * entry.getValue() );
+            if (rand.nextBoolean())
+                mutationRates.put(entry.getKey(), 0.95f * entry.getValue());
             else
-                mutationRates.put(entry.getKey(), 1.05263f * entry.getValue() );
+                mutationRates.put(entry.getKey(), 1.05263f * entry.getValue());
         }
 
 
@@ -323,7 +332,7 @@ public class Genome implements Comparable {
         int j = 0;
         int random2 = rand.nextInt(nodes.size() - NEAT_Config.INPUTS - 1) + NEAT_Config.INPUTS + 1;
         int random1 = rand.nextInt(nodes.size());
-        if(forceBais)
+        if (forceBais)
             random1 = NEAT_Config.INPUTS;
         int node1 = -1;
         int node2 = -1;
@@ -378,6 +387,7 @@ public class Genome implements Comparable {
             connectionGeneList.add(new ConnectionGene(nextNode, randomCon.getOut(), InnovationCounter.newInnovation(), randomCon.getWeight(), true));
         }
     }
+
     void disableMutate() {
         //generateNetwork();                // remove laters
         if (connectionGeneList.size() > 0) {
@@ -397,10 +407,10 @@ public class Genome implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        Genome g = (Genome)o;
-        if (fitness==g.fitness)
+        Genome g = (Genome) o;
+        if (fitness == g.fitness)
             return 0;
-        else if(fitness >g.fitness)
+        else if (fitness > g.fitness)
             return 1;
         else
             return -1;
@@ -431,12 +441,12 @@ public class Genome implements Comparable {
         this.points = points;
     }
 
-    public void writeTofile(){
+    public void writeTofile() {
         BufferedWriter bw = null;
         FileWriter fw = null;
         StringBuilder builder = new StringBuilder();
-        for (ConnectionGene conn: connectionGeneList) {
-            builder.append(conn.toString()+"\n");
+        for (ConnectionGene conn : connectionGeneList) {
+            builder.append(conn.toString() + "\n");
         }
         try {
 
