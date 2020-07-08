@@ -3,7 +3,7 @@ package com.advice.cards.enemies
 import com.advice.cards.*
 import com.advice.cards.status.StatusEffect
 
-class Cultist : Enemy(48) {
+class Cultist : Enemy(GameManager.seed.nextInt(48, 54)) {
 
     override val image = R.drawable.cultist
 
@@ -18,40 +18,32 @@ class Cultist : Enemy(48) {
         intent.play(self, target)
         intent = cards.last()
     }
-}
 
-class Incantation : Card(CardType.POWER, TargetType.SELF) {
+    private class Incantation : Card(CardType.POWER, TargetType.SELF) {
 
-    private val ritual = 3
+        private val ritual = 3
 
-    override val description: String
-        get() = "Gain Ritual $ritual"
+        init {
+            effects.add(ApplyStatusEffectEffect(Ritual(ritual)))
+        }
+    }
 
-    override fun play(self: Entity, entity: Entity) {
-        self.applyStatusEffect(Ritual(ritual))
+    private class DarkStrike : Card(CardType.ATTACK, TargetType.ENEMY) {
+
+        private val damage = 6
+
+        init {
+            effects.add(DamageEffect(damage))
+        }
+    }
+
+    class Ritual(private val amount: Int) : StatusEffect(0) {
+        // todo: implement
+
+        override fun toString(): String {
+            return "Gain Ritual $amount"
+        }
     }
 }
 
-class DarkStrike : Card(CardType.ATTACK, TargetType.ENEMY) {
 
-    private val damage = 6
-
-    private val effect = DamageEffect(damage)
-
-    init {
-        effects.add(effect)
-    }
-
-    override val description: String
-        get() = effect.toString()
-
-    override fun play(self: Entity, entity: Entity) {
-        effects.forEach { it.apply(self, entity) }
-    }
-}
-
-class Ritual(private val amount: Int) : StatusEffect(0) {
-
-
-
-}

@@ -1,8 +1,8 @@
 package com.advice.cards
 
-import com.advice.cards.enemies.Cultist
-import com.advice.cards.enemies.EnemyGroup
-import com.advice.cards.enemies.group
+import com.advice.cards.colourless.Bandaid
+import com.advice.cards.colourless.Finesse
+import com.advice.cards.enemies.*
 import com.advice.cards.hero.Ironclad
 import com.advice.cards.red.attack.*
 import com.advice.cards.red.skill.*
@@ -11,6 +11,37 @@ import kotlin.random.Random
 object GameManager {
 
     var seed = Random(1024L)
+
+    val act = act("Act I") {
+        // First 3 encounters
+        this + group {
+            this + Cultist()
+        }
+
+        this + group {
+            this + JawWorm()
+        }
+
+        this + group {
+            this + Louse()
+            this + Louse()
+        }
+
+        // todo: add small slimes
+
+        // blue slaver (12.5%)
+        this + group {
+            this + Slaver()
+        }
+
+        this + group {
+            this + Louse()
+            this + Louse()
+            this + Louse()
+        }
+
+    }
+
 
     fun resetSeed() {
         seed = Random(1024L)
@@ -43,24 +74,18 @@ object GameManager {
         Bludgeon()
     )
 
+    private val colourlessCards = listOf(
+        Finesse()//,
+        //Bandaid()
+    )
+
     val hero = Ironclad()
     val deck = hero.deck
 
     var encounter: Encounter? = null
 
     init {
-        encounter = Encounter(group {
-            this + Cultist()
-        })
-
-
-        val bonus = redCards.shuffled(seed).take(5)
-        //deck.addCards(bonus)
-        //deck.addCard(Thunderclap())
-        //deck.addCard(Anger())
-
-        deck.addCard(PerfectedStrike())
-        deck.addCard(TrueGrit())
+        encounter = Encounter(act.encounters[0])
     }
 
     fun setEnemy(enemy: Enemy) {
@@ -86,7 +111,9 @@ object GameManager {
         val index = seed.nextInt(100)
         val rarity = getRewardRarity(index)
 
-        return redCards
+        val cards = redCards + colourlessCards
+
+        return cards
             //.filter { it.rarity == rarity }
             .shuffled(seed).take(3)
     }

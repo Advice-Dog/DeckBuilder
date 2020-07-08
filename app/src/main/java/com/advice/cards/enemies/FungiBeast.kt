@@ -1,14 +1,15 @@
 package com.advice.cards.enemies
 
 import com.advice.cards.*
+import com.advice.cards.status.FlexBuff
 
-class JawWorm(hp: Int = GameManager.seed.nextInt(40, 44)) : Enemy(hp) {
+class FungiBeast : Enemy(GameManager.seed.nextInt(22, 28)) {
 
     override val image = R.drawable.jaw_worm
 
     private val cards = listOf(
-        Chomp(),
-        Thrash()
+        Bite(),
+        Grow()
     )
 
     override var intent = cards.random(GameManager.seed)
@@ -18,23 +19,23 @@ class JawWorm(hp: Int = GameManager.seed.nextInt(40, 44)) : Enemy(hp) {
         intent = cards.random(GameManager.seed)
     }
 
-    private class Chomp : Card(CardType.ATTACK, TargetType.ENEMY) {
+    private class Bite : Card(CardType.ATTACK, TargetType.ENEMY) {
 
-        private val damage = 11
+        private val damage = 7
 
         init {
             effects.add(DamageEffect(damage))
         }
     }
 
-    private class Thrash : Card(CardType.ATTACK, TargetType.ENEMY) {
+    private class Grow : Card(CardType.SKILL, TargetType.SELF) {
 
-        private val damage = 6
-        private val block = 5
+        private val strength = 3
 
         init {
-            effects.add(DamageEffect(damage))
-            effects.add(BlockEffect(block))
+            effects.add(ApplyStatusEffectEffect(FlexBuff(strength)))
         }
     }
 }
+
+

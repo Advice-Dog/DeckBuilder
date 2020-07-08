@@ -126,6 +126,23 @@ class DamageEffect(private val amount: Int) : Effect() {
     override fun toString() = "Deal $amount damage."
 }
 
+class HealEffect(private val amount:Int): Effect() {
+
+    override fun getScaledValue(self: Entity, target: Entity?) = amount
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Heal ${getScaledValue(self, target)} damage."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val damage = getScaledValue(self, target)
+        self.healDamage(damage)
+    }
+
+    override fun toString() = "Heal $amount damage."
+
+}
+
 class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1) : Effect() {
     override fun getScaledValue(self: Entity, target: Entity?): Int {
         if (target != null) {

@@ -1,7 +1,7 @@
 package com.advice.cards
 
 import androidx.annotation.CallSuper
-import com.advice.cards.enemies.Ritual
+import com.advice.cards.enemies.Cultist
 import com.advice.cards.logger.CombatLogger
 import com.advice.cards.red.attack.Strike
 import com.advice.cards.status.FlexBuff
@@ -47,8 +47,8 @@ open class Entity(
 
     fun healDamage(amount: Int) {
         CombatLogger.onMessage("${this.javaClass.simpleName} heals for $amount.")
-        // todo: actually heal
-        hp = maxHp
+        hp += amount
+        hp = min(hp, maxHp)
     }
 
     fun addBlock(amount: Int) {
@@ -73,7 +73,7 @@ open class Entity(
 
     fun getStrength(): Int {
         // cultist
-        val ritual = statusEffects.find { it is Ritual }
+        val ritual = statusEffects.find { it is Cultist.Ritual }
         if (ritual != null) {
             val i = abs(ritual.getStacks()) - 1
             return i * 3

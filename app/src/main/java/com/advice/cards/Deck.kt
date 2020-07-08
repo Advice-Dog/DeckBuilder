@@ -1,11 +1,12 @@
 package com.advice.cards
 
+import com.advice.cards.colourless.Bandaid
 import com.advice.cards.logger.CombatLogger
 
 class Deck(val cards: List<Card> = emptyList()) {
 
     companion object {
-        private const val DRAW_AMOUNT = 4
+        private const val DRAW_AMOUNT = 5
     }
 
     private val deck = ArrayList<Card>()
@@ -94,15 +95,17 @@ class Deck(val cards: List<Card> = emptyList()) {
 
     fun play(card: Card) {
         // todo: add in other logic for post-play
-        discardCard(card)
+        if (card is Bandaid) {
+            exhaustCard(card)
+        } else {
+            discardCard(card)
+        }
     }
 
     fun setCards(cards: List<Card>) {
         deck.clear()
         deck.addAll(cards)
     }
-
-
 
 
 }
