@@ -1,24 +1,33 @@
 package com.advice.cards
 
+import com.advice.cards.enemies.Boss
 import com.advice.cards.hero.Ironclad
 import com.evo.NEAT.Environment
 import com.evo.NEAT.Genome
 import com.evo.NEAT.Pool
 import kotlin.math.max
+import kotlin.random.Random
 
 private const val GENERATIONS = 100
 
 var mostEncounters = 0
 var mostEncountersPerGeneration = 0
-var mostEncountersGenome: Genome? = null
 var genomeStartTimer = 0L
 
 
 class SlayTheSpire : Environment {
 
+    companion object {
+        var index = 0
+    }
+
     override fun evaluateFitness(population: ArrayList<Genome>) {
+
         mostEncountersPerGeneration = 0
+        index++
+
         for (genome in population) {
+            GameManager.seed = Random(index)
             genome.fitness = getEncounterFitness(genome)
         }
     }
@@ -37,26 +46,28 @@ fun main() {
         pool.evaluateFitness(instance)
         top = pool.topGenome
 
-        println("Generation $generation")
-        println("Top Fitness: " + top.points)
-        println("Most Encounters (this generation): $mostEncountersPerGeneration")
-        println("Most Encounters: $mostEncounters")
+        val block = "==========================================================" +
+                "\nGeneration $generation" +
+                "\nTop Fitness: ${top.points}" +
+                "\nMost Encounters (this generation): $mostEncountersPerGeneration" +
+                "\nMost Encounters: $mostEncounters" +
+                "\n=========================================================="
 
+        println(block)
 
         pool.breedNewGeneration()
         generation++
     }
 
+
+    // Reset to previous generation
+    GameManager.seed = Random(SlayTheSpire.index)
     val fitness = getEncounterFitness(top, print = true)
     println("Completed! Top: $fitness")
 }
 
 fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
-    // reset seed to be the same.
-    GameManager.resetSeed()
-
     val hero = Ironclad()
-
 
     var fitness = 0.0f
 
@@ -88,7 +99,7 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
         while (!encounter.isComplete) {
             turnCounter = encounter.turnCounter
 
-            if (System.currentTimeMillis() - genomeStartTimer > 1000L) {
+            if (System.currentTimeMillis() - genomeStartTimer > 3000L) {
                 println("Taking too long! Encounters: $encountersComplete")
                 hitTurnLimit = true
                 break
@@ -164,7 +175,10 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                     card = hand.firstOrNull { it.energy <= hero.getCurrentEnergy() } ?: continue
                 }
                 if (print) {
-                    println("Play [${card.name}]")
+                    println(
+                        "Play [${card.name}: ${card.getDescription(hero, target)
+                            .replace("\n", " ")}]"
+                    )
                 }
 
                 encounter.play(card)
@@ -176,6 +190,10 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
 
 
             damageDone += tempHealth - target.getHealth()
+
+            if(target is Boss) {
+                fitness += 10 * (target.getMaxHealth() - target.getHealth())
+            }
 
             encounter.endTurn()
 
@@ -201,7 +219,14 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
             encountersComplete++
 
             addCard(genome, print, hero)
+
+            hero.healDamage(6)
         }
+    }
+
+    // Bonus for completing it all
+    if (hero.isAlive) {
+        fitness += 5000
     }
 
     if (encountersComplete > mostEncountersPerGeneration) {
@@ -210,7 +235,6 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
 
     if (encountersComplete > mostEncounters) {
         mostEncounters = encountersComplete
-        mostEncountersGenome = genome
     }
 
     if (print) {
@@ -233,10 +257,6 @@ private fun addCard(
 
     val result = genome.evaluateNetwork(ids)[0]
 
-    if (print) {
-        println("REWARDS: " + rewards.joinToString { it.name })
-    }
-
     val card = when {
         result < 0.25 -> rewards[0]
         result < 0.50 -> rewards[1]
@@ -244,15 +264,15 @@ private fun addCard(
         else -> null
     }
 
-    if (card != null) {
-        if (print) {
-            println(" >>>> Adding ${card.name} to deck.")
-        }
+    if (print) {
+        val block = "==========================================================" +
+                "\n Rewards: " + rewards.joinToString { it.name } +
+                "\n Choosing: " + card?.name +
+                "\n=========================================================="
+        println(block)
+    }
 
+    if (card != null) {
         hero.deck.addCard(card)
-    } else {
-        if (print) {
-            println(" >>>>> Not adding any card to the deck.")
-        }
     }
 }

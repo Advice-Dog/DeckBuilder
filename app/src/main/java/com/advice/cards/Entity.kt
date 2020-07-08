@@ -61,6 +61,9 @@ open class Entity(
     }
 
     override fun toString(): String {
+        if (isDead) {
+            return "${javaClass.simpleName} (dead)"
+        }
         return "${javaClass.simpleName} ($hp/$maxHp) + $armor"
     }
 
@@ -114,7 +117,7 @@ open class Entity(
 
 }
 
-open class Hero(val deck: Deck = Deck()) : Entity(50) {
+open class Hero(val deck: Deck = Deck(), hp: Int) : Entity(hp) {
 
     private var energy: Int
     private val maxEnergy = 3
@@ -166,6 +169,9 @@ abstract class Enemy(maxHp: Int = 15) : Entity(maxHp) {
     }
 
     override fun toString(): String {
+        if (isDead) {
+            return super.toString()
+        }
         return super.toString() + " (" + intent.toString() + ")"
     }
 

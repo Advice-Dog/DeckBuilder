@@ -1,6 +1,5 @@
 package com.advice.cards
 
-import com.advice.cards.colourless.Bandaid
 import com.advice.cards.colourless.Finesse
 import com.advice.cards.enemies.*
 import com.advice.cards.hero.Ironclad
@@ -43,6 +42,18 @@ object GameManager {
         // other
         this + group {
             this + Cultist()
+        }
+
+        this + group {
+            this + JawWorm()
+            this + JawWorm()
+        }
+
+        this + group {
+            this + Slaver()
+        }
+
+        this + group {
             this + Cultist()
         }
 
@@ -53,28 +64,14 @@ object GameManager {
 
         this + group {
             this + Slaver()
-            this + Slaver()
-        }
-
-        this + group {
-            this + Cultist()
-            this + Slaver()
-        }
-
-        this + group {
-            this + JawWorm()
-            this + JawWorm()
-            this + Louse()
         }
 
         this + group {
             this + Slaver()
-            this + Slaver()
         }
 
         this + group {
-            this + Slaver()
-            this + Cultist()
+            this + Boss()
         }
     }
 
@@ -97,7 +94,7 @@ object GameManager {
         Thunderclap(),
         TwinStrike(),
         //Defend(), starter card
-        Flex(),
+        //todo: fix flex buff Flex(),
         ShrugItOff(),
         Armaments(),
 

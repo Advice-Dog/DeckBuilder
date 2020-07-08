@@ -21,7 +21,7 @@ class Ironclad : Hero(
             Defend(),
             Bash()
         )
-    )
+    ), 80
 ) {
     override val image = R.drawable.ironclad
 }

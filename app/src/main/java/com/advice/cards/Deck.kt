@@ -90,7 +90,11 @@ class Deck(val cards: List<Card> = emptyList()) {
     }
 
     override fun toString(): String {
-        return "${deck.size}: ${deck.joinToString { it.name }}"
+        val cards = deck.groupBy { it.name }
+        val names = cards.map { "${it.value.size}x ${it.key}" }
+
+
+        return "${deck.size}: ${names.joinToString()}"
     }
 
     fun play(card: Card) {
