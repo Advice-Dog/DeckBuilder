@@ -6,7 +6,7 @@ import com.evo.NEAT.Genome
 import com.evo.NEAT.Pool
 import kotlin.math.max
 
-private const val GENERATIONS = 300
+private const val GENERATIONS = 100
 
 var mostEncounters = 0
 var mostEncountersPerGeneration = 0
@@ -100,7 +100,7 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
             }
 
             if (print) {
-                println("Encounter ${encountersComplete + 1} -- Turn ${encounter.turnCounter}  [$hero] vs [$target]")
+                println("Encounter ${encountersComplete + 1} -- Turn ${encounter.turnCounter}  [$hero] vs [${encounter.enemies.joinToString { it.toString() }}]")
             }
 
             var tempHealth = target.getHealth()
@@ -140,23 +140,22 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                 ids.add(target.intent.hashCode().toFloat())
 
 
-                val output = genome.evaluateNetwork(ids.toFloatArray())[0]
+                val output = genome.evaluateNetwork(ids.toFloatArray())
+                val sorted = output.sortedDescending()
 
-                var card: Card
+                var card: Card? = null
 
-                try {
-                    card = when {
-                        output < 0.20 -> hand[0]
-                        output < 0.40 -> hand[1]
-                        output < 0.60 -> hand[2]
-                        output < 0.80 -> hand[3]
-                        output < 1.00 -> hand[4]
-                        else -> hand[0]
+                for (i in 0..output.size) {
+                    try {
+                        card = hand[output.indexOf(sorted[i])]
+                        break
+                    } catch (ex: IndexOutOfBoundsException) {
+
                     }
-                } catch (ex: IndexOutOfBoundsException) {
-                    continue
                 }
 
+                if (card == null)
+                    continue
 
                 if (hero.getCurrentEnergy() < card.energy) {
                     if (print) {
@@ -179,6 +178,10 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
             damageDone += tempHealth - target.getHealth()
 
             encounter.endTurn()
+
+            if (print && hero.isDead) {
+                println("Hero has died!")
+            }
         }
 
         if (hitTurnLimit) {
