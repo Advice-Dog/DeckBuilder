@@ -112,10 +112,15 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                 println("Hand: ${hero.deck.hand.joinToString { it.name }}")
             }
 
+
+            val hand = ArrayList<Card>()
+            hand.addAll(hero.deck.hand)
+
+
+
             while (hero.getCurrentEnergy() > 0 && attempts < 8) {
                 attempts++
 
-                val hand = hero.deck.hand
 
                 val ids = ArrayList<Float>()
                 hand.forEach {
@@ -153,7 +158,6 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                 }
 
 
-
                 if (hero.getCurrentEnergy() < card.energy) {
                     if (print) {
                         println("Invalid card [${card.name}]")
@@ -165,6 +169,9 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                 }
 
                 encounter.play(card)
+
+                // todo: remove this, shouldn't need it.
+                hand.remove(card)
             }
 
 
@@ -186,10 +193,11 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
             fitness += //2.0.pow((turnLimit - turnCounter).toDouble()).toFloat()
                 turnLimit - turnCounter
             fitness += //16.0.pow(hero.getHealth() - damageTaken).toFloat()
-                max(0, 100 - (damageTaken * 5))
+                max(0, 100 - (damageTaken * 15))
 
             encountersComplete++
-            //addCard(genome, print, hero)
+
+            addCard(genome, print, hero)
         }
     }
 
@@ -217,7 +225,8 @@ private fun addCard(
 ) {
     val rewards = GameManager.getCardRewards()
     val ids =
-        floatArrayOf(0f) + rewards.map { -it.hashCode().toFloat() }.toFloatArray()
+        floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f) + rewards.map { -it.hashCode().toFloat() }
+            .toFloatArray()
 
     val result = genome.evaluateNetwork(ids)[0]
 

@@ -40,6 +40,42 @@ object GameManager {
             this + Louse()
         }
 
+        // other
+        this + group {
+            this + Cultist()
+            this + Cultist()
+        }
+
+        this + group {
+            this + JawWorm()
+            this + JawWorm()
+        }
+
+        this + group {
+            this + Slaver()
+            this + Slaver()
+        }
+
+        this + group {
+            this + Cultist()
+            this + Slaver()
+        }
+
+        this + group {
+            this + JawWorm()
+            this + JawWorm()
+            this + Louse()
+        }
+
+        this + group {
+            this + Slaver()
+            this + Slaver()
+        }
+
+        this + group {
+            this + Slaver()
+            this + Cultist()
+        }
     }
 
 
