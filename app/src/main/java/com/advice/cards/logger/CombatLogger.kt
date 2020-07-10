@@ -6,7 +6,7 @@ import com.advice.cards.cards.Card
 import com.advice.cards.cards.Deck
 import com.advice.cards.encounters.Encounter
 
-object CombatLogger : BaseLogger() {
+object CombatLogger {
 
     var isEnabled: Boolean = false
 
@@ -18,7 +18,7 @@ object CombatLogger : BaseLogger() {
 
     private val log = ArrayList<String>()
 
-    override fun onMessage(message: String) {
+    fun onMessage(message: String) {
         add(message)
     }
 

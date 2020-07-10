@@ -1,7 +1,10 @@
 package com.evo.NEAT
 
 import com.evo.NEAT.config.NEAT_Config
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.math.min
 
 /**
  * Created by vishnu on 7/1/17.
@@ -54,16 +57,27 @@ class Pool {
         rankGlobally()
     }
 
-    suspend fun evaluateFitness(environment: SuspendEnvironment) {
-        val allGenome = ArrayList<Genome>()
-        for (s in species) {
-            for (g in s.genomes) {
-                allGenome.add(g)
+    fun evaluateFitness(environment: SuspendEnvironment) {
+        runBlocking {
+            val allGenome = ArrayList<Genome>()
+            for (s in species) {
+                for (g in s.genomes) {
+                    allGenome.add(g)
+                }
+            }
+
+            for (i in 0 until allGenome.size step NEAT_Config.BATCH_SIZE) {
+                val lower = min(allGenome.size, i)
+                val upper = min(allGenome.size, i + NEAT_Config.BATCH_SIZE)
+
+                val batch = allGenome.subList(lower, upper)
+                async {
+                    environment.evaluateFitness(batch)
+                }
             }
         }
-        environment.evaluateFitness(allGenome)
-        rankGlobally()
 
+        rankGlobally()
     }
 
     // experimental

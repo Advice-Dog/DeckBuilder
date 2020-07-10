@@ -5,10 +5,6 @@ import com.advice.cards.Enemy
 class EnemyGroup : Cloneable {
     val enemies = ArrayList<Enemy>()
 
-//    infix fun EnemyGroup.add(enemy: Enemy) {
-//        enemies.add(enemy)
-//    }
-
     operator fun plus(enemy: Enemy) {
         enemies.add(enemy)
     }
@@ -21,6 +17,8 @@ class EnemyGroup : Cloneable {
             }
         }
     }
+
+    override fun toString() = "EnemyGroup: [ " + enemies.joinToString { it.toString() } + " ]"
 }
 
 fun group(init: EnemyGroup.() -> Unit): EnemyGroup {
