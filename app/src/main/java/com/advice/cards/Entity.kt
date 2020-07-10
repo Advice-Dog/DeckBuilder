@@ -3,12 +3,12 @@ package com.advice.cards
 import androidx.annotation.CallSuper
 import com.advice.cards.cards.Card
 import com.advice.cards.cards.Deck
-import com.advice.cards.encounters.enemies.Cultist
-import com.advice.cards.logger.CombatLogger
 import com.advice.cards.cards.red.attack.Strike
 import com.advice.cards.cards.status.FlexBuff
 import com.advice.cards.cards.status.StatusEffect
 import com.advice.cards.cards.status.Vulnerable
+import com.advice.cards.encounters.enemies.Cultist
+import com.advice.cards.logger.CombatLogger
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -16,7 +16,7 @@ import kotlin.math.roundToInt
 
 open class Entity(
     private val maxHp: Int
-) {
+) : Cloneable {
 
     private var hp: Int = maxHp
     private var armor: Int = 0
@@ -64,14 +64,17 @@ open class Entity(
 
     override fun toString(): String {
         if (isDead) {
-            return "${javaClass.simpleName} (dead)"
+            return "(dead)"
         }
-        return "${javaClass.simpleName} ($hp/$maxHp) + $armor"
+        if (getBlock() > 0) {
+            return "[$armor] $hp/$maxHp"
+        }
+        return "$hp/$maxHp"
     }
 
     fun applyStatusEffect(effect: StatusEffect) {
         CombatLogger.onMessage("${this.javaClass.simpleName} has been effected by ${effect.javaClass.simpleName} (${effect.getStacks()}).")
-        statusEffects.add(effect)
+        //statusEffects.add(effect.clone())
     }
 
     fun getBlock() = armor
@@ -114,9 +117,12 @@ open class Entity(
         return base
     }
 
-    fun getMaxHealth() = 50
+    fun getMaxHealth() = maxHp
 
 
+    public override fun clone(): Entity {
+        return super.clone() as Entity
+    }
 }
 
 open class Hero(val deck: Deck = Deck(), hp: Int) : Entity(hp) {
@@ -169,12 +175,4 @@ abstract class Enemy(maxHp: Int = 15) : Entity(maxHp) {
     open fun play(target: Entity, self: Entity) {
         hand.first().play(self, target)
     }
-
-    override fun toString(): String {
-        if (isDead) {
-            return super.toString()
-        }
-        return super.toString() + " (" + intent.toString() + ")"
-    }
-
 }

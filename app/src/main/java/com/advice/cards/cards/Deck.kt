@@ -4,13 +4,16 @@ import com.advice.cards.GameManager
 import com.advice.cards.cards.colourless.Bandaid
 import com.advice.cards.logger.CombatLogger
 
-class Deck(val cards: List<Card> = emptyList()) {
+class Deck(cards: List<Card> = emptyList()) {
 
     companion object {
         private const val DRAW_AMOUNT = 5
     }
 
-    private val deck = ArrayList<Card>()
+    val deck = ArrayList<Card>()
+
+    val size: Int
+        get() = deck.size
 
     val hand = ArrayList<Card>()
     val draw = ArrayList<Card>()

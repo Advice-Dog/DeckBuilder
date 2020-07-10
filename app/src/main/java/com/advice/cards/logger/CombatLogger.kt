@@ -8,10 +8,18 @@ import com.advice.cards.encounters.Encounter
 
 object CombatLogger : BaseLogger() {
 
+    var isEnabled: Boolean = false
+
+    private fun add(string: String) {
+        if (isEnabled) {
+            log.add(string)
+        }
+    }
+
     private val log = ArrayList<String>()
 
     override fun onMessage(message: String) {
-        log.add(message)
+        add(message)
     }
 
     override fun toString() = log.joinToString(separator = "\n")
@@ -37,24 +45,24 @@ object CombatLogger : BaseLogger() {
         encountersComplete: Int
     ) {
         this.encounter = encounter
-        log.add("==========================================================")
-        log.add("                    Next Encounter ($encountersComplete)")
-        log.add("==========================================================")
+        add("==========================================================")
+        add("                    Next Encounter ($encountersComplete)")
+        add("==========================================================")
     }
 
 
     fun onNextTurn(hand: ArrayList<Card>) {
-        log.add("==========================================================")
-        log.add("                Turn ${encounter?.turnCounter}")
-        log.add("==========================================================")
+        add("==========================================================")
+        add("                Turn ${encounter?.turnCounter}")
+        add("==========================================================")
         addEntitiesASCI(encounter!!)
-        log.add("Hand: ${hand.joinToString { it.name }}")
+        add("Hand: ${hand.joinToString { it.name }}")
     }
 
 
     fun onCardPlayed(card: Card, entity: Entity, target: Entity) {
         val description = card.getDescription(entity, target)
-        log.add(
+        add(
             " ${entity.javaClass.simpleName} playing [${card.name}: ${description.replace(
                 "\n",
                 " "
@@ -63,19 +71,19 @@ object CombatLogger : BaseLogger() {
     }
 
     fun onError(error: String) {
-        log.add(error)
+        add(error)
     }
 
     fun setDeck(deck: Deck) {
-        log.add("Deck:")
-        log.add(deck.toString())
+        add("Deck:")
+        add(deck.toString())
     }
 
     fun addCard(rewards: List<Card>, card: Card?) {
-        log.add("==========================================================")
-        log.add(" Rewards: " + rewards.joinToString { it.name })
-        log.add(" Choosing: " + card?.name)
-        log.add("==========================================================")
+        add("==========================================================")
+        add(" Rewards: " + rewards.joinToString { it.name })
+        add(" Choosing: " + card?.name)
+        add("==========================================================")
     }
 
     fun print() {
@@ -101,7 +109,7 @@ object CombatLogger : BaseLogger() {
 
         for (i in hero.indices) {
             val string = hero[i] + "  " + enemies[i]
-            log.add(string)
+            add(string)
         }
     }
 

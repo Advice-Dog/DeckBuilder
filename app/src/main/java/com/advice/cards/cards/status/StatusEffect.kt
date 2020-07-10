@@ -1,6 +1,6 @@
 package com.advice.cards.cards.status
 
-abstract class StatusEffect(stacks: Int) {
+abstract class StatusEffect(stacks: Int) : Cloneable {
 
     private var remainingTurns = stacks
 
@@ -12,4 +12,7 @@ abstract class StatusEffect(stacks: Int) {
 
     fun hasExpired() = remainingTurns == 0
 
+    public override fun clone(): StatusEffect {
+        return super.clone() as StatusEffect
+    }
 }

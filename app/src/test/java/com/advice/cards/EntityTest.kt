@@ -1,7 +1,11 @@
 package com.advice.cards
 
+import com.advice.cards.cards.red.attack.Strike
+import com.advice.cards.cards.red.skill.Flex
 import com.advice.cards.cards.status.FlexBuff
 import com.advice.cards.cards.status.Vulnerable
+import com.advice.cards.encounters.enemies.Cultist
+import com.advice.cards.hero.Ironclad
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -98,6 +102,32 @@ class EntityTest {
         assertEquals(18, amount)
     }
 
+
+    @Test
+    fun `creating two heroes will have different decks`() {
+        val lhs = Ironclad()
+        val rhs = Ironclad()
+        lhs.deck.addCard(Flex())
+
+
+        assertEquals(11, lhs.deck.size)
+        assertEquals(10, rhs.deck.size)
+    }
+
+    @Test
+    fun `creating two heroes will have different cards`() {
+        val lhs = Ironclad()
+        lhs.applyStatusEffect(FlexBuff(2))
+        val rhs = Ironclad()
+        val target = Cultist()
+        val strike = Strike()
+
+        val description = strike.getDescription(lhs, target)
+        val other = strike.getDescription(rhs, target)
+
+        assertEquals("Deal 7 damage.", description)
+        assertEquals("Deal 5 damage.", other)
+    }
 }
 
 

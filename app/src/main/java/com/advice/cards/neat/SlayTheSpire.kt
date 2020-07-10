@@ -1,27 +1,38 @@
-package com.evo.NEAT
+package com.advice.cards.neat
 
 import com.advice.cards.GameManager
+import com.advice.cards.Hero
 import com.advice.cards.cards.Card
 import com.advice.cards.encounters.Encounter
+import com.advice.cards.encounters.act
 import com.advice.cards.encounters.enemies.Boss
 import com.advice.cards.hero.Ironclad
+import com.advice.cards.logger.CombatLogger
+import com.evo.NEAT.Genome
+import com.evo.NEAT.Pool
+import com.evo.NEAT.SuspendEnvironment
+import kotlinx.coroutines.runBlocking
 import kotlin.math.max
 import kotlin.random.Random
 
-private const val GENERATIONS = 100
+private const val GENERATIONS = 20
+private const val TURN_LIMIT = 15
+private const val TIME_LIMIT = 5_000L
 
 var mostEncounters = 0
 var mostEncountersPerGeneration = 0
 var genomeStartTimer = 0L
 
 
-class SlayTheSpire : Environment {
+class SlayTheSpire : SuspendEnvironment {
 
     companion object {
+        private const val BATCH_SIZE = 50
+
         var index = 0
     }
 
-    override fun evaluateFitness(population: ArrayList<Genome>) {
+    override suspend fun evaluateFitness(population: List<Genome>) {
 
         mostEncountersPerGeneration = 0
         index++
@@ -29,6 +40,17 @@ class SlayTheSpire : Environment {
         for (genome in population) {
             GameManager.seed = Random(index)
             genome.fitness = getEncounterFitness(genome)
+//            val result = getEncounterResult(genome)
+//            if (result.hero.isAlive) {
+//                println("fitness: ${result.fitness}")
+//
+//                genome.fitness = 99999f
+//                //CombatLogger.print()
+//                break
+//            }
+
+
+//            genome.fitness = result.fitness.toFloat()
         }
     }
 }
@@ -43,12 +65,14 @@ fun main() {
     var generation = 0
 
     while (generation < GENERATIONS) {
-        pool.evaluateFitness(instance)
-        top = pool.topGenome
+
+        runBlocking {
+            pool.evaluateFitness(instance)
+        }
 
         val block = "==========================================================" +
                 "\nGeneration $generation" +
-                "\nTop Fitness: ${top.points}" +
+                "\nTop Fitness: ${pool.topGenome.points}" +
                 "\nMost Encounters (this generation): $mostEncountersPerGeneration" +
                 "\nMost Encounters: $mostEncounters" +
                 "\n=========================================================="
@@ -57,16 +81,22 @@ fun main() {
 
         pool.breedNewGeneration()
         generation++
+
     }
 
 
     // Reset to previous generation
     GameManager.seed = Random(SlayTheSpire.index)
-    val fitness = getEncounterFitness(top, print = true)
+    CombatLogger.isEnabled = true
+
+    val fitness = getEncounterFitness(top)
     println("Completed! Top: $fitness")
+
+    // print the last combat
+    CombatLogger.print()
 }
 
-fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
+fun getEncounterFitness(genome: Genome): Float {
     val hero = Ironclad()
 
     var fitness = 0.0f
@@ -80,14 +110,19 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
     genomeStartTimer = System.currentTimeMillis()
 
 
-    val act = GameManager.act
-    act.reset()
-
+    val act = act.clone()
 
     while (hero.isAlive && encountersComplete < act.encounters.size) {
+
+
         val encounter =
             Encounter(act.encounters[encountersComplete])
 
+        if (encountersComplete == 6 || encountersComplete == 9 || encounter.target is Boss) {
+            hero.healDamage((80 * 0.30f).toInt())
+        }
+
+        CombatLogger.onNextEncounter(encounter, encountersComplete)
 
         val target = encounter.target
 
@@ -111,24 +146,15 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                 break
             }
 
-            if (print) {
-                println("Encounter ${encountersComplete + 1} -- Turn ${encounter.turnCounter}  [$hero] vs [${encounter.enemies.joinToString { it.toString() }}]")
-            }
-
             var tempHealth = target.getHealth()
 
 
             var attempts = 0
 
-            if (print) {
-                println("Hand: ${hero.deck.hand.joinToString { it.name }}")
-            }
-
-
             val hand = ArrayList<Card>()
             hand.addAll(hero.deck.hand)
 
-
+            CombatLogger.onNextTurn(hand)
 
             while (hero.getCurrentEnergy() > 0 && attempts < 8) {
                 attempts++
@@ -170,17 +196,10 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
                     continue
 
                 if (hero.getCurrentEnergy() < card.energy) {
-                    if (print) {
-                        println("Invalid card [${card.name}]")
-                    }
+                    CombatLogger.onError("Invalid card choice: ${card.name}")
                     card = hand.firstOrNull { it.energy <= hero.getCurrentEnergy() } ?: continue
                 }
-                if (print) {
-                    println(
-                        "Play [${card.name}: ${card.getDescription(hero, target)
-                            .replace("\n", " ")}]"
-                    )
-                }
+                CombatLogger.onCardPlayed(card, hero, target)
 
                 encounter.play(card)
 
@@ -192,14 +211,15 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
 
             damageDone += tempHealth - target.getHealth()
 
-            if(target is Boss) {
-                fitness += 10 * (target.getMaxHealth() - target.getHealth())
+            if (target is Boss) {
+                val bossDamageBonus = 10 * (target.getMaxHealth() - target.getHealth())
+                fitness += bossDamageBonus
             }
 
             encounter.endTurn()
 
-            if (print && hero.isDead) {
-                println("Hero has died!")
+            if (hero.isDead) {
+                CombatLogger.onMessage("Hero has died.")
             }
         }
 
@@ -219,15 +239,15 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
 
             encountersComplete++
 
-            addCard(genome, print, hero)
+            addCard(genome, hero)
 
-            hero.healDamage(6)
+            //hero.healDamage(6)
         }
     }
 
     // Bonus for completing it all
     if (hero.isAlive) {
-        fitness += 5000
+        fitness += 50000
     }
 
     if (encountersComplete > mostEncountersPerGeneration) {
@@ -238,17 +258,16 @@ fun getEncounterFitness(genome: Genome, print: Boolean = false): Float {
         mostEncounters = encountersComplete
     }
 
-    if (print) {
-        println("Final Deck:")
-        println(hero.deck)
-    }
-
     return fitness
+//    if (hero.isAlive) {
+//        //CombatLogger.print()
+//    }
+
+    //return result
 }
 
 private fun addCard(
     genome: Genome,
-    print: Boolean,
     hero: Ironclad
 ) {
     val rewards = GameManager.getCardRewards()
@@ -265,15 +284,34 @@ private fun addCard(
         else -> null
     }
 
-    if (print) {
-        val block = "==========================================================" +
-                "\n Rewards: " + rewards.joinToString { it.name } +
-                "\n Choosing: " + card?.name +
-                "\n=========================================================="
-        println(block)
-    }
+    CombatLogger.addCard(rewards, card)
 
     if (card != null) {
         hero.deck.addCard(card)
     }
+
+    CombatLogger.addCard(rewards, card)
+}
+
+data class EncounterResult(
+    val hero: Hero,
+    val turnsTaken: Int,
+    val damageTaken: Int
+) {
+    val fitness: Int
+        get() {
+            val damageMod = (TURN_LIMIT - turnsTaken) * 10
+            val healthMod = max(10, 100 - damageTaken * 10)
+            return damageMod + healthMod
+        }
+
+    override fun toString() = super.toString() + " $fitness"
+}
+
+data class ActResult(
+    val hero: Hero,
+    val encounters: ArrayList<EncounterResult> = ArrayList()
+) {
+    val fitness: Int
+        get() = encounters.sumBy { it.fitness } + if (hero.isAlive) 5000 else 0
 }

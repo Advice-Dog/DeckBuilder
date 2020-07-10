@@ -1,6 +1,6 @@
 package com.advice.cards.encounters.enemies
 
-class Act {
+class Act : Cloneable {
 
     val encounters = ArrayList<EnemyGroup>()
 
@@ -13,6 +13,16 @@ class Act {
         encounters.forEach {
             it.enemies.forEach {
                 it.healDamage(100)
+            }
+        }
+    }
+
+    public override fun clone(): Act {
+        val previous = encounters
+
+        return act("act") {
+            previous.forEach { group ->
+                this + group.clone()
             }
         }
     }

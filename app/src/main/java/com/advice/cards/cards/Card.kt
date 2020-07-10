@@ -3,6 +3,7 @@ package com.advice.cards.cards
 import com.advice.cards.Entity
 import com.advice.cards.Hero
 import com.advice.cards.cards.status.StatusEffect
+import com.advice.cards.encounters.enemies.Boss
 
 
 abstract class Card(
@@ -110,9 +111,16 @@ abstract class Effect {
 class DamageEffect(private val amount: Int) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?): Int {
+
+
         if (target != null) {
             return target.getScaledDamage(self, amount)
         }
+
+        if (self is Boss || target is Boss) {
+            println("target damage = $amount")
+        }
+
         return amount + self.getStrength()
     }
 
@@ -128,7 +136,7 @@ class DamageEffect(private val amount: Int) : Effect() {
     override fun toString() = "Deal $amount damage."
 }
 
-class HealEffect(private val amount:Int): Effect() {
+class HealEffect(private val amount: Int) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?) = amount
 
@@ -171,7 +179,7 @@ class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1) : 
 class PerfectedStrikeDamageEffect(private val amount: Int, private val bonus: Int = 2) : Effect() {
     override fun getScaledValue(self: Entity, target: Entity?): Int {
         val count =
-            (self as Hero).deck.cards.count { it.name.contains("strike", ignoreCase = true) }
+            (self as Hero).deck.deck.count { it.name.contains("strike", ignoreCase = true) }
 
         val bonus = count * bonus
 
