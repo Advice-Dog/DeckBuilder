@@ -1,7 +1,9 @@
 package com.advice.cards.cards
 
 import com.advice.cards.Entity
+import com.advice.cards.GameManager
 import com.advice.cards.Hero
+import com.advice.cards.RNG
 import com.advice.cards.cards.status.StatusEffect
 import com.advice.cards.encounters.enemies.Boss
 
@@ -295,7 +297,7 @@ class UpdateHandCardEffect(private val update: Upgrade) : Effect() {
     override fun apply(self: Entity, target: Entity) {
         val hand = (self as Hero).deck.hand
         if (update == Upgrade.ONE) {
-            hand.random().upgrade()
+            RNG.random(hand).upgrade()
         } else {
             hand.forEach { it.upgrade() }
         }
@@ -334,7 +336,7 @@ class ExhaustCardEffect(private val cardTarget: Target) : Effect() {
         val deck = (self as Hero).deck
         val hand = deck.hand
         if (cardTarget == Target.RANDOM) {
-            deck.exhaustCard(hand.random())
+            deck.exhaustCard(RNG.random(hand))
         } else {
             TODO()
         }

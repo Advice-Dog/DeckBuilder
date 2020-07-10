@@ -1,10 +1,13 @@
 package com.advice.cards.encounters.enemies
 
-import com.advice.cards.*
+import com.advice.cards.Enemy
+import com.advice.cards.Entity
+import com.advice.cards.R
+import com.advice.cards.RNG
 import com.advice.cards.cards.*
 import com.advice.cards.cards.status.Vulnerable
 
-class Slaver : Enemy(GameManager.seed.nextInt(46, 50)) {
+class Slaver : Enemy(RNG.nextInt(46, 50)) {
 
     override val image = R.drawable.cultist
 
@@ -45,7 +48,7 @@ class Slaver : Enemy(GameManager.seed.nextInt(46, 50)) {
             )
         }
     }
-    
+
     // todo: add in Entangle (Applies 1 Entangled)
 }
 

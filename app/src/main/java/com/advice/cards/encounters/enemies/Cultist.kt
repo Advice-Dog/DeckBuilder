@@ -4,7 +4,7 @@ import com.advice.cards.*
 import com.advice.cards.cards.*
 import com.advice.cards.cards.status.StatusEffect
 
-class Cultist : Enemy(GameManager.seed.nextInt(48, 54)) {
+class Cultist : Enemy(RNG.nextInt(48, 54)) {
 
     override val image = R.drawable.cultist
 

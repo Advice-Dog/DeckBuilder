@@ -3,6 +3,7 @@ package com.advice.cards.encounters
 import com.advice.cards.Enemy
 import com.advice.cards.GameManager
 import com.advice.cards.Hero
+import com.advice.cards.RNG
 import com.advice.cards.cards.Card
 import com.advice.cards.cards.TargetType.*
 import com.advice.cards.encounters.enemies.EnemyGroup
@@ -10,9 +11,8 @@ import com.advice.cards.logger.CombatLogger
 
 class Encounter(enemyGroup: EnemyGroup) {
 
-    val id: Int
-        get() = 1
-    
+    val id = enemyGroup.id
+
     var hero: Hero =
         GameManager.hero
     private val deck = hero.deck
@@ -43,7 +43,7 @@ class Encounter(enemyGroup: EnemyGroup) {
             SELF -> card.play(hero, target)
             ENEMY -> card.play(hero, target)
             ALL_ENEMY -> enemies.forEach { card.play(hero, it) }
-            RANDOM_ENEMY -> card.play(hero, enemies.random())
+            RANDOM_ENEMY -> card.play(hero, RNG.random(enemies))
         }
 
         deck.play(card)

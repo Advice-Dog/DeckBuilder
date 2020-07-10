@@ -74,7 +74,7 @@ open class Entity(
 
     fun applyStatusEffect(effect: StatusEffect) {
         CombatLogger.onMessage("${this.javaClass.simpleName} has been effected by ${effect.javaClass.simpleName} (${effect.getStacks()}).")
-        //statusEffects.add(effect.clone())
+        statusEffects.add(effect.clone())
     }
 
     fun getBlock() = armor

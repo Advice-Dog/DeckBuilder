@@ -4,7 +4,7 @@ import com.advice.cards.*
 import com.advice.cards.cards.*
 import com.advice.cards.cards.status.FlexBuff
 
-class FungiBeast : Enemy(GameManager.seed.nextInt(22, 28)) {
+class FungiBeast : Enemy(RNG.nextInt(22, 28)) {
 
     override val image = R.drawable.jaw_worm
 
@@ -13,11 +13,11 @@ class FungiBeast : Enemy(GameManager.seed.nextInt(22, 28)) {
         Grow()
     )
 
-    override var intent = cards.random(GameManager.seed)
+    override var intent = RNG.random(cards)
 
     override fun play(target: Entity, self: Entity) {
         intent.play(self, target)
-        intent = cards.random(GameManager.seed)
+        intent = RNG.random(cards)
     }
 
     private class Bite : Card(CardType.ATTACK, TargetType.ENEMY) {

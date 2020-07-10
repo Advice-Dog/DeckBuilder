@@ -2,7 +2,7 @@ package com.advice.cards.encounters.enemies
 
 import com.advice.cards.Enemy
 
-class EnemyGroup : Cloneable {
+class EnemyGroup(val id: Int) : Cloneable {
     val enemies = ArrayList<Enemy>()
 
     operator fun plus(enemy: Enemy) {
@@ -11,7 +11,7 @@ class EnemyGroup : Cloneable {
 
     public override fun clone(): EnemyGroup {
         val clone = enemies.map { it.clone() as Enemy }
-        return group {
+        return group(id) {
             clone.forEach {
                 this + it
             }
@@ -21,20 +21,10 @@ class EnemyGroup : Cloneable {
     override fun toString() = "EnemyGroup: [ " + enemies.joinToString { it.toString() } + " ]"
 }
 
-fun group(init: EnemyGroup.() -> Unit): EnemyGroup {
-    val group = EnemyGroup()
+var index = 1
+
+fun group(id: Int = index++, init: EnemyGroup.() -> Unit): EnemyGroup {
+    val group = EnemyGroup(id)
     group.init()
     return group
-}
-
-
-fun test() {
-
-    1 shl 3
-
-    group {
-        this + Cultist()
-    }
-
-
 }

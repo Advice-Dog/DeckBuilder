@@ -8,15 +8,6 @@ class Act : Cloneable {
         encounters.add(group)
     }
 
-    // todo: remove
-    fun reset() {
-        encounters.forEach {
-            it.enemies.forEach {
-                it.healDamage(100)
-            }
-        }
-    }
-
     public override fun clone(): Act {
         val previous = encounters
 

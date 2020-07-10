@@ -3,21 +3,16 @@ package com.advice.cards
 import com.advice.cards.cards.Card
 import com.advice.cards.cards.CardRarity
 import com.advice.cards.cards.colourless.Finesse
-import com.advice.cards.encounters.enemies.*
-import com.advice.cards.hero.Ironclad
 import com.advice.cards.cards.red.attack.*
-import com.advice.cards.cards.red.skill.*
+import com.advice.cards.cards.red.skill.Armaments
+import com.advice.cards.cards.red.skill.SeeingRed
+import com.advice.cards.cards.red.skill.Shockwave
+import com.advice.cards.cards.red.skill.ShrugItOff
 import com.advice.cards.encounters.Encounter
-import kotlin.random.Random
+import com.advice.cards.encounters.enemies.EnemyGroup
+import com.advice.cards.hero.Ironclad
 
 object GameManager {
-
-    var seed = Random(1024L)
-
-
-    fun resetSeed() {
-        seed = Random(1024L)
-    }
 
     private val redCards = listOf(
         Anger(),
@@ -61,13 +56,6 @@ object GameManager {
             Encounter(com.advice.cards.encounters.act.encounters[0])
     }
 
-    fun setEnemy(enemy: Enemy) {
-        val encounter = Encounter(group {
-            this + enemy
-        })
-        this.encounter = encounter
-    }
-
     fun setEnemyGroup(enemyGroup: EnemyGroup) {
         this.encounter = Encounter(enemyGroup)
     }
@@ -80,15 +68,14 @@ object GameManager {
         this.encounter = null
     }
 
-    fun getCardRewards(seed: Random = this.seed): List<Card> {
-        val index = seed.nextInt(100)
+    fun getCardRewards(): List<Card> {
+        val index = RNG.nextInt(100)
         val rarity = getRewardRarity(index)
 
         val cards = redCards + colourlessCards
+        //.filter { it.rarity == rarity }
+        return RNG.shuffled(cards).take(3)
 
-        return cards
-            //.filter { it.rarity == rarity }
-            .shuffled(seed).take(3)
     }
 
     private fun getRewardRarity(index: Int): CardRarity {

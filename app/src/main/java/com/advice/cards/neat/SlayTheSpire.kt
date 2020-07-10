@@ -1,14 +1,14 @@
 package com.advice.cards.neat
 
-import com.advice.cards.GameManager
+import com.advice.cards.RNG
 import com.advice.cards.logger.CombatLogger
 import com.evo.NEAT.Genome
 import com.evo.NEAT.Pool
 import com.evo.NEAT.SuspendEnvironment
 import com.evo.NEAT.config.NEAT_Config
-import kotlin.random.Random
+import java.util.*
 
-const val TURN_LIMIT = 15
+const val TURN_LIMIT = 25
 const val TIME_LIMIT = 5_000L
 
 var mostEncounters = 0
@@ -27,10 +27,19 @@ class SlayTheSpire : SuspendEnvironment {
         mostEncountersPerGeneration = 0
         //index++
 
+        val results = TreeSet<String>()
+
         for (genome in population) {
-            GameManager.seed = Random(index)
-            genome.fitness = getEncounterFitness(genome)
+            //GameManager.seed = Random(index)
+            RNG.reset()
+            val result = getGameResult(genome)
+
+            val message = "Result: ${result.completedEncounters} -- ${result.fitness}"
+            results.add(message)
+            genome.fitness = result.fitness.toFloat()
         }
+
+        //results.forEach { println(it) }
     }
 }
 
@@ -46,17 +55,37 @@ fun main() {
 
     while (generation < NEAT_Config.GENERATIONS) {
         pool.evaluateFitness(instance)
+        top = pool.topGenome
+
+        CombatLogger.reset()
+
+        RNG.reset()
+
+        val best = getGameResult(top)
+
+        RNG.reset()
+
+        val best2 = getGameResult(top)
+
+        CombatLogger.print()
+
+        if (best.fitness != best2.fitness) {
+            println(best.toString())
+            println(best2.toString())
+            throw IllegalStateException("Whoopies")
+        }
+
 
         val block = "==========================================================" +
                 "\nGeneration $generation" +
-                "\nTop Fitness: ${pool.topGenome.points}" +
-                "\nMost Encounters (this generation): $mostEncountersPerGeneration" +
+                "\nTop Fitness: ${top.points} -- ${best.fitness} -- ${best2.fitness}" +
+                "\nTop Deck: ${best.hero.deck}" +
+                "\nCompleted Encounters: ${best.completedEncounters}" +
                 "\nMost Encounters: $mostEncounters" +
                 "\n=========================================================="
 
         println(block)
 
-        top = pool.topGenome
 
         pool.breedNewGeneration()
         generation++
@@ -65,10 +94,10 @@ fun main() {
 
 
     // Reset to previous generation
-    GameManager.seed = Random(SlayTheSpire.index)
+    RNG.reset()
     CombatLogger.isEnabled = true
 
-    getEncounterFitness(pool.topGenome)
+    getGameResult(pool.topGenome)
 
     // print the last combat
     CombatLogger.print()

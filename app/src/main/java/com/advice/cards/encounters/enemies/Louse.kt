@@ -1,9 +1,10 @@
 package com.advice.cards.encounters.enemies
 
-import com.advice.cards.*
-import com.advice.cards.cards.Card
-import com.advice.cards.cards.CardType
-import com.advice.cards.cards.TargetType
+import com.advice.cards.Enemy
+import com.advice.cards.Entity
+import com.advice.cards.R
+import com.advice.cards.RNG
+import com.advice.cards.cards.*
 import com.advice.cards.cards.status.FlexBuff
 
 class Louse : Enemy(10) {
@@ -15,22 +16,19 @@ class Louse : Enemy(10) {
         Grow()
     )
 
-    override var intent = cards.random(GameManager.seed)
+    override var intent = cards.first()
 
     override fun play(target: Entity, self: Entity) {
         intent.play(self, target)
-        intent = cards.random(GameManager.seed)
+        intent = cards.last()
     }
 
     private class Bite : Card(CardType.ATTACK, TargetType.ENEMY) {
 
-        private val damage = GameManager.seed.nextInt(5, 7)
+        private val damage = RNG.nextInt(5, 7)
 
-        override val description: String
-            get() = "Deal $damage damage."
-
-        override fun play(self: Entity, entity: Entity) {
-            entity.dealDamage(damage)
+        init {
+            effects.add(DamageEffect(damage))
         }
     }
 
@@ -38,11 +36,8 @@ class Louse : Enemy(10) {
 
         private val strength = 3
 
-        override val description: String
-            get() = "Gain $strength Strength."
-
-        override fun play(self: Entity, entity: Entity) {
-            self.applyStatusEffect(FlexBuff(strength))
+        init {
+            effects.add(ApplyStatusEffectEffect(FlexBuff(strength)))
         }
     }
 }

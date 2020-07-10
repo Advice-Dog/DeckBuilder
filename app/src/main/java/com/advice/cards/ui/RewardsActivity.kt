@@ -3,9 +3,10 @@ package com.advice.cards.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.advice.cards.cards.Card
 import com.advice.cards.GameManager
 import com.advice.cards.R
+import com.advice.cards.RNG
+import com.advice.cards.cards.Card
 import com.advice.cards.encounters.enemies.Cultist
 import com.advice.cards.encounters.enemies.JawWorm
 import com.advice.cards.encounters.enemies.group
@@ -37,7 +38,7 @@ class RewardsActivity : Activity(), DeckCardView.OnCardSelected {
             }
         )
 
-        GameManager.setEnemyGroup(groups.random())
+        GameManager.setEnemyGroup(RNG.random(groups))
 
         val intent = Intent(this, CombatActivity::class.java)
         startActivity(intent)

@@ -1,9 +1,12 @@
 package com.advice.cards.encounters.enemies
 
-import com.advice.cards.*
+import com.advice.cards.Enemy
+import com.advice.cards.Entity
+import com.advice.cards.R
+import com.advice.cards.RNG
 import com.advice.cards.cards.*
 
-class JawWorm(hp: Int = GameManager.seed.nextInt(40, 44)) : Enemy(hp) {
+class JawWorm(hp: Int = RNG.nextInt(40, 44)) : Enemy(hp) {
 
     override val image = R.drawable.jaw_worm
 
@@ -12,11 +15,11 @@ class JawWorm(hp: Int = GameManager.seed.nextInt(40, 44)) : Enemy(hp) {
         Thrash()
     )
 
-    override var intent = cards.random(GameManager.seed)
+    override var intent = RNG.random(cards)
 
     override fun play(target: Entity, self: Entity) {
         intent.play(self, target)
-        intent = cards.random(GameManager.seed)
+        intent = RNG.random(cards)
     }
 
     private class Chomp : Card(CardType.ATTACK, TargetType.ENEMY) {

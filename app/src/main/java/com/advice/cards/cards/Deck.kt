@@ -1,6 +1,7 @@
 package com.advice.cards.cards
 
 import com.advice.cards.GameManager
+import com.advice.cards.RNG
 import com.advice.cards.cards.colourless.Bandaid
 import com.advice.cards.logger.CombatLogger
 
@@ -36,11 +37,11 @@ class Deck(cards: List<Card> = emptyList()) {
     }
 
     fun shuffle() {
-        deck.shuffle(GameManager.seed)
+        RNG.shuffle(deck)
     }
 
     fun startCombat() {
-        deck.shuffle(GameManager.seed)
+        RNG.shuffle(deck)
         draw.addAll(deck)
         drawCard(DRAW_AMOUNT)
     }
@@ -70,7 +71,7 @@ class Deck(cards: List<Card> = emptyList()) {
 
     fun shuffleDiscardIntoDraw() {
         draw.addAll(discard)
-        draw.shuffle(GameManager.seed)
+        RNG.shuffle(draw)
         discard.clear()
     }
 
@@ -90,7 +91,7 @@ class Deck(cards: List<Card> = emptyList()) {
 
     fun addCards(cards: List<Card>) {
         deck.addAll(cards)
-        deck.shuffle(GameManager.seed)
+        RNG.shuffle(deck)
     }
 
     override fun toString(): String {

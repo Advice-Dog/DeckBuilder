@@ -1,32 +1,54 @@
 package com.advice.cards.neat
 
-import com.advice.cards.Hero
 import com.advice.cards.encounters.Encounter
 import com.advice.cards.encounters.enemies.Boss
 import kotlin.math.max
 
 data class EncounterResult(
-    val hero: Hero,
+    val previousHealth: Int,
+    val currentHealth: Int,
     val encounter: Encounter,
-    val turnsTaken: Int,
-    val damageTaken: Int
+    val turnsTaken: Int
 ) {
 
-    val hasHitTurnLimit: Boolean
-        get() = turnsTaken == TURN_LIMIT
+    val isComplete: Boolean
+        get() = encounter.enemies.all { it.isDead }
+
+    val hasHitTurnLimit: Boolean = turnsTaken == TURN_LIMIT
+
+    private val isAlive: Boolean = currentHealth > 0
+
+    private val damageTaken = previousHealth - currentHealth
 
     val fitness: Int
         get() {
-            val damageMod = (TURN_LIMIT - turnsTaken) * 10
-            val healthMod = max(10, 100 - damageTaken * 10)
-
             // boss bonus
-            if (encounter.target is Boss && encounter.target.isDead && hero.isAlive) {
-                return 100_000 + hero.getHealth() * 10_000
+            if (encounter.target is Boss) {
+                if (encounter.target.isDead && isAlive) {
+                    return 100_000 + currentHealth * 10_000
+                }
+
+                return 1_000 * (encounter.target.getMaxHealth() - encounter.target.getHealth())
             }
 
-            return damageMod + healthMod
+            if (turnsTaken == TURN_LIMIT) {
+                return -100
+            }
+
+            if (!isAlive) {
+                return 0
+            }
+
+
+            val damageMod = encounter.enemies.sumBy { it.getMaxHealth() - it.getHealth() }
+            //val speedMod = (TURN_LIMIT - turnsTaken) * 10
+            val healthMod = max(10, 100 - damageTaken * 10)
+
+
+
+            return encounter.id * (healthMod + damageMod)
         }
 
-    override fun toString() = super.toString() + " $fitness"
+    override fun toString() =
+        "EncounterResult(enemies=[${encounter.enemies.joinToString { it.javaClass.simpleName }}], fitness=$fitness, damageTaken=$damageTaken, turnsTaken=$turnsTaken)"
 }
