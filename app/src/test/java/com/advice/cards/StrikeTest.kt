@@ -1,6 +1,6 @@
 package com.advice.cards
 
-import com.advice.cards.red.attack.Strike
+import com.advice.cards.cards.red.attack.Strike
 import org.junit.Test
 
 class StrikeTest {

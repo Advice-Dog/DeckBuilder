@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.get
-import com.advice.cards.Card
+import com.advice.cards.cards.Card
 import com.advice.cards.GameManager
 import com.advice.cards.R
 import com.advice.cards.logger.CombatLogger

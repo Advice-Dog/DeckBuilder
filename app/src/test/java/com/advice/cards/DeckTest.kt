@@ -1,7 +1,8 @@
 package com.advice.cards
 
-import com.advice.cards.red.skill.Defend
-import com.advice.cards.red.attack.Strike
+import com.advice.cards.cards.Deck
+import com.advice.cards.cards.red.skill.Defend
+import com.advice.cards.cards.red.attack.Strike
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

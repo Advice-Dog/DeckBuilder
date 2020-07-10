@@ -8,7 +8,7 @@ import com.advice.cards.Enemy
 import com.advice.cards.Entity
 import com.advice.cards.GameManager
 import com.advice.cards.R
-import com.advice.cards.enemies.Cultist
+import com.advice.cards.encounters.enemies.Cultist
 import kotlinx.android.synthetic.main.view_entity.view.*
 
 class EntityView : FrameLayout {

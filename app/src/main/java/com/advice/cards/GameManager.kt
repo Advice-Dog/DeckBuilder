@@ -1,79 +1,18 @@
 package com.advice.cards
 
-import com.advice.cards.colourless.Finesse
-import com.advice.cards.enemies.*
+import com.advice.cards.cards.Card
+import com.advice.cards.cards.CardRarity
+import com.advice.cards.cards.colourless.Finesse
+import com.advice.cards.encounters.enemies.*
 import com.advice.cards.hero.Ironclad
-import com.advice.cards.red.attack.*
-import com.advice.cards.red.skill.*
+import com.advice.cards.cards.red.attack.*
+import com.advice.cards.cards.red.skill.*
+import com.advice.cards.encounters.Encounter
 import kotlin.random.Random
 
 object GameManager {
 
     var seed = Random(1024L)
-
-    val act = act("Act I") {
-        // First 3 encounters
-        this + group {
-            this + Cultist()
-        }
-
-        this + group {
-            this + JawWorm()
-        }
-
-        this + group {
-            this + Louse()
-            this + Louse()
-        }
-
-        // todo: add small slimes
-
-        // blue slaver (12.5%)
-        this + group {
-            this + Slaver()
-        }
-
-        this + group {
-            this + Louse()
-            this + Louse()
-            this + Louse()
-        }
-
-        // other
-        this + group {
-            this + Cultist()
-        }
-
-        this + group {
-            this + JawWorm()
-            this + JawWorm()
-        }
-
-        this + group {
-            this + Slaver()
-        }
-
-        this + group {
-            this + Cultist()
-        }
-
-        this + group {
-            this + JawWorm()
-            this + JawWorm()
-        }
-
-        this + group {
-            this + Slaver()
-        }
-
-        this + group {
-            this + Slaver()
-        }
-
-        this + group {
-            this + Boss()
-        }
-    }
 
 
     fun resetSeed() {
@@ -118,7 +57,8 @@ object GameManager {
     var encounter: Encounter? = null
 
     init {
-        encounter = Encounter(act.encounters[0])
+        encounter =
+            Encounter(com.advice.cards.encounters.act.encounters[0])
     }
 
     fun setEnemy(enemy: Enemy) {

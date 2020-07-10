@@ -1,9 +1,10 @@
 package com.advice.cards
 
-import com.advice.cards.enemies.JawWorm
-import com.advice.cards.enemies.group
-import com.advice.cards.red.skill.Defend
-import com.advice.cards.red.attack.Strike
+import com.advice.cards.encounters.enemies.JawWorm
+import com.advice.cards.encounters.enemies.group
+import com.advice.cards.cards.red.skill.Defend
+import com.advice.cards.cards.red.attack.Strike
+import com.advice.cards.encounters.Encounter
 import org.junit.Test
 
 class EncounterTest {

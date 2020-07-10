@@ -1,7 +1,7 @@
 package com.advice.cards
 
-import com.advice.cards.status.FlexBuff
-import com.advice.cards.status.Vulnerable
+import com.advice.cards.cards.status.FlexBuff
+import com.advice.cards.cards.status.Vulnerable
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

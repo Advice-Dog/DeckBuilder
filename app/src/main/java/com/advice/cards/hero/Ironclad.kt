@@ -1,11 +1,11 @@
 package com.advice.cards.hero
 
-import com.advice.cards.Deck
+import com.advice.cards.cards.Deck
 import com.advice.cards.Hero
 import com.advice.cards.R
-import com.advice.cards.red.attack.Bash
-import com.advice.cards.red.attack.Strike
-import com.advice.cards.red.skill.Defend
+import com.advice.cards.cards.red.attack.Bash
+import com.advice.cards.cards.red.attack.Strike
+import com.advice.cards.cards.red.skill.Defend
 
 class Ironclad : Hero(
     Deck(

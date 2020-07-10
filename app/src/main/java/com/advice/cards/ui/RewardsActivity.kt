@@ -3,12 +3,12 @@ package com.advice.cards.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.advice.cards.Card
+import com.advice.cards.cards.Card
 import com.advice.cards.GameManager
 import com.advice.cards.R
-import com.advice.cards.enemies.Cultist
-import com.advice.cards.enemies.JawWorm
-import com.advice.cards.enemies.group
+import com.advice.cards.encounters.enemies.Cultist
+import com.advice.cards.encounters.enemies.JawWorm
+import com.advice.cards.encounters.enemies.group
 import kotlinx.android.synthetic.main.activity_rewards.*
 
 class RewardsActivity : Activity(), DeckCardView.OnCardSelected {

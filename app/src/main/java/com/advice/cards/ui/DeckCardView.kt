@@ -8,7 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.advice.cards.Card
+import com.advice.cards.cards.Card
 import com.advice.cards.Entity
 import com.advice.cards.GameManager
 import com.advice.cards.R

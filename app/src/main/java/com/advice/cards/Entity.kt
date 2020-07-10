@@ -1,12 +1,14 @@
 package com.advice.cards
 
 import androidx.annotation.CallSuper
-import com.advice.cards.enemies.Cultist
+import com.advice.cards.cards.Card
+import com.advice.cards.cards.Deck
+import com.advice.cards.encounters.enemies.Cultist
 import com.advice.cards.logger.CombatLogger
-import com.advice.cards.red.attack.Strike
-import com.advice.cards.status.FlexBuff
-import com.advice.cards.status.StatusEffect
-import com.advice.cards.status.Vulnerable
+import com.advice.cards.cards.red.attack.Strike
+import com.advice.cards.cards.status.FlexBuff
+import com.advice.cards.cards.status.StatusEffect
+import com.advice.cards.cards.status.Vulnerable
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
