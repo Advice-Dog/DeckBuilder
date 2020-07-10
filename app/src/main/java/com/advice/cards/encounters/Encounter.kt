@@ -10,6 +10,9 @@ import com.advice.cards.logger.CombatLogger
 
 class Encounter(enemyGroup: EnemyGroup) {
 
+    val id: Int
+        get() = 1
+    
     var hero: Hero =
         GameManager.hero
     private val deck = hero.deck

@@ -7,5 +7,5 @@ data class ActResult(
     val encounters: ArrayList<EncounterResult> = ArrayList()
 ) {
     val fitness: Int
-        get() = encounters.sumBy { it.fitness } + if (hero.isAlive) 5000 else 0
+        get() = encounters.sumBy { it.fitness }
 }
