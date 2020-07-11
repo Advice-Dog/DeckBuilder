@@ -41,10 +41,6 @@ fun getGameResult(genome: Genome): ActResult {
         }
     }
 
-    if (CombatLogger.isEnabled) {
-        println("top!")
-    }
-
     if (encountersComplete > mostEncountersPerGeneration) {
         mostEncountersPerGeneration = encountersComplete
     }
@@ -74,9 +70,6 @@ private fun getEncounterResult(hero: Hero, encounter: Encounter, genome: Genome)
 
     var turnCounter = 0
     var previousHealth = hero.getHealth()
-
-
-    CombatLogger.isEnabled = encounter.id == 3
 
 
     while (!encounter.isComplete) {

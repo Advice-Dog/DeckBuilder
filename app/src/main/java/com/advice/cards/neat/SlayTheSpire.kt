@@ -34,8 +34,8 @@ class SlayTheSpire : SuspendEnvironment {
             RNG.reset()
             val result = getGameResult(genome)
 
-            val message = "Result: ${result.completedEncounters} -- ${result.fitness}"
-            results.add(message)
+            //val message = "Result: ${result.completedEncounters} -- ${result.fitness}"
+            //results.add(message)
             genome.fitness = result.fitness.toFloat()
         }
 
@@ -57,24 +57,16 @@ fun main() {
         pool.evaluateFitness(instance)
         top = pool.topGenome
 
-        CombatLogger.reset()
-
         RNG.reset()
-
         val best = getGameResult(top)
-
         RNG.reset()
-
         val best2 = getGameResult(top)
-
-        CombatLogger.print()
 
         if (best.fitness != best2.fitness) {
             println(best.toString())
             println(best2.toString())
             throw IllegalStateException("Whoopies")
         }
-
 
         val block = "==========================================================" +
                 "\nGeneration $generation" +

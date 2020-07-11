@@ -23,7 +23,7 @@ open class Entity(
     private var strength = 0
     private var agility = 0
 
-    private val statusEffects = ArrayList<StatusEffect>()
+    val statusEffects = ArrayList<StatusEffect>()
 
     val isAlive: Boolean
         get() = hp > 0
@@ -121,7 +121,10 @@ open class Entity(
 
 
     public override fun clone(): Entity {
-        return super.clone() as Entity
+        val entity = super.clone() as Entity
+        // todo: figure out why this is cloning over status effects.
+        entity.statusEffects.clear()
+        return entity
     }
 }
 
@@ -174,5 +177,9 @@ abstract class Enemy(maxHp: Int = 15) : Entity(maxHp) {
 
     open fun play(target: Entity, self: Entity) {
         hand.first().play(self, target)
+    }
+
+    override fun toString(): String {
+        return "${javaClass.simpleName}([${getBlock()}] ${getHealth()} / ${getMaxHealth()})"
     }
 }

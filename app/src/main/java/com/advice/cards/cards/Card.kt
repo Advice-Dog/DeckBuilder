@@ -1,11 +1,11 @@
 package com.advice.cards.cards
 
 import com.advice.cards.Entity
-import com.advice.cards.GameManager
 import com.advice.cards.Hero
 import com.advice.cards.RNG
 import com.advice.cards.cards.status.StatusEffect
 import com.advice.cards.encounters.enemies.Boss
+import com.advice.cards.logger.CombatLogger
 
 
 abstract class Card(
@@ -36,6 +36,7 @@ abstract class Card(
         get() = effects.joinToString { it.toString() }
 
     open fun play(self: Entity, entity: Entity) {
+        CombatLogger.onCardPlayed(this, self, entity)
         effects.forEach { it.apply(self, entity) }
     }
 
