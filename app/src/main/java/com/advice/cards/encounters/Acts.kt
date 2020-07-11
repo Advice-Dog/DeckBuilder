@@ -14,7 +14,6 @@ val act = act("Act I") {
 
     this + group {
         this + Louse()
-        this + Louse()
     }
 
     // todo: add small slimes
@@ -26,8 +25,6 @@ val act = act("Act I") {
 
     this + group {
         this + Louse()
-        this + Louse()
-        this + Louse()
     }
 
     // other
@@ -36,7 +33,6 @@ val act = act("Act I") {
     }
 
     this + group {
-        this + JawWorm()
         this + JawWorm()
     }
 
@@ -50,10 +46,196 @@ val act = act("Act I") {
 
     this + group {
         this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+
+    // other
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
         this + JawWorm()
     }
 
     this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+
+    // other
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+
+    // other
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+
+    // other
+    this + group {
+        this + Cultist()
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+        this + Slaver()
+    }
+
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+        this + Slaver()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    // other
+    this + group {
+        this + Cultist()
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+        this + Slaver()
+    }
+
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+        this + Slaver()
+    }
+
+    this + group {
+        this + Slaver()
+    }
+
+    // other
+    this + group {
+        this + Cultist()
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
+        this + Slaver()
+    }
+
+    this + group {
+        this + Cultist()
+    }
+
+    this + group {
+        this + JawWorm()
+    }
+
+    this + group {
+        this + Slaver()
         this + Slaver()
     }
 

@@ -25,19 +25,19 @@ data class EncounterResult(
             // boss bonus
             if (encounter.target is Boss) {
                 if (encounter.target.isDead && isAlive) {
-                    return 100_000 + currentHealth * 10_000
+                    return 25_000 + currentHealth * 10_000
                 }
 
-                return 1_000 * (encounter.target.getMaxHealth() - encounter.target.getHealth())
+                return 100 * (encounter.target.getMaxHealth() - encounter.target.getHealth())
             }
 
             if (turnsTaken == TURN_LIMIT) {
                 return -100
             }
 
-            if (!isAlive) {
-                return 0
-            }
+//            if (!isAlive) {
+//                return 0
+//            }
 
 
             val damageMod = encounter.enemies.sumBy { it.getMaxHealth() - it.getHealth() }

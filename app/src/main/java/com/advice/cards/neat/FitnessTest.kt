@@ -57,7 +57,7 @@ fun getGameResult(genome: Genome): ActResult {
 private fun getEncounterResult(hero: Hero, encounter: Encounter, genome: Genome): EncounterResult {
     var damageDone = 0
 
-    if (encounter.id == 6 || encounter.id == 9 || encounter.target is Boss) {
+    if (encounter.id % 8 == 0 || encounter.target is Boss) {
         hero.healDamage((80 * 0.30f).toInt())
     }
 
@@ -96,7 +96,6 @@ private fun getEncounterResult(hero: Hero, encounter: Encounter, genome: Genome)
         CombatLogger.onNextTurn(hand)
 
         while (hero.getCurrentEnergy() > 0 && attempts < 8) {
-            attempts++
 
 
             val ids = ArrayList<Float>()
@@ -127,18 +126,19 @@ private fun getEncounterResult(hero: Hero, encounter: Encounter, genome: Genome)
                     card = hand[output.indexOf(sorted[i])]
                     break
                 } catch (ex: IndexOutOfBoundsException) {
-
                 }
             }
 
-            if (card == null)
+            if (card == null) {
+                attempts++
                 continue
+            }
 
             if (hero.getCurrentEnergy() < card.energy) {
+                attempts++
                 CombatLogger.onError("Invalid card choice: ${card.name}")
                 card = hand.firstOrNull { it.energy <= hero.getCurrentEnergy() } ?: continue
             }
-            CombatLogger.onCardPlayed(card, hero, target)
 
             encounter.play(card)
 

@@ -2,12 +2,10 @@ package com.advice.cards
 
 import com.advice.cards.cards.Card
 import com.advice.cards.cards.CardRarity
+import com.advice.cards.cards.colourless.Bandaid
 import com.advice.cards.cards.colourless.Finesse
 import com.advice.cards.cards.red.attack.*
-import com.advice.cards.cards.red.skill.Armaments
-import com.advice.cards.cards.red.skill.SeeingRed
-import com.advice.cards.cards.red.skill.Shockwave
-import com.advice.cards.cards.red.skill.ShrugItOff
+import com.advice.cards.cards.red.skill.*
 import com.advice.cards.encounters.Encounter
 import com.advice.cards.encounters.enemies.EnemyGroup
 import com.advice.cards.hero.Ironclad
@@ -28,9 +26,10 @@ object GameManager {
         Thunderclap(),
         TwinStrike(),
         //Defend(), starter card
-        //todo: fix flex buff Flex(),
+        Flex(),
         ShrugItOff(),
         Armaments(),
+        PerfectedStrike(),
 
         // uncommon
         SeeingRed(),
@@ -42,8 +41,8 @@ object GameManager {
     )
 
     private val colourlessCards = listOf(
-        Finesse()//,
-        //Bandaid()
+        Finesse(),
+        Bandaid()
     )
 
     val hero = Ironclad()

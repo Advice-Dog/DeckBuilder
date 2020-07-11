@@ -6,6 +6,7 @@ import com.advice.cards.Hero
 import com.advice.cards.RNG
 import com.advice.cards.cards.Card
 import com.advice.cards.cards.TargetType.*
+import com.advice.cards.encounters.enemies.Boss
 import com.advice.cards.encounters.enemies.EnemyGroup
 import com.advice.cards.logger.CombatLogger
 
@@ -27,6 +28,9 @@ class Encounter(enemyGroup: EnemyGroup) {
     // todo: remove
     val target: Enemy
         get() = enemies.firstOrNull { it.isAlive } ?: enemies.first()
+
+    val isBossFight: Boolean
+        get() = enemies.first() is Boss
 
     init {
         enemies.addAll(enemyGroup.enemies)

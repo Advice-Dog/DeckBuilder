@@ -5,7 +5,7 @@ package com.evo.NEAT.config;
  */
 public class NEAT_Config {
 
-    public static final int GENERATIONS = 25;
+    public static final int GENERATIONS = 50;
 
     public static final int INPUTS = 9;
     public static final int OUTPUTS = 5;

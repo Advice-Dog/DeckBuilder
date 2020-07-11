@@ -65,16 +65,24 @@ fun main() {
         if (best.fitness != best2.fitness) {
             println(best.toString())
             println(best2.toString())
-            throw IllegalStateException("Whoopies")
+            //throw IllegalStateException("Whoopies")
         }
 
-        val block = "==========================================================" +
+        var block = "==========================================================" +
                 "\nGeneration $generation" +
-                "\nTop Fitness: ${top.points} -- ${best.fitness} -- ${best2.fitness}" +
-                "\nTop Deck: ${best.hero.deck}" +
-                "\nCompleted Encounters: ${best.completedEncounters}" +
-                "\nMost Encounters: $mostEncounters" +
-                "\n=========================================================="
+                "\nTop Fitness: ${top.points}" +
+                "\nTop Deck: ${best.hero.deck}"
+
+        val encounter = best.encounters.last().encounter
+        if (encounter.isBossFight) {
+            block += "\n Boss Health: " + encounter.target.toString()
+        }
+
+
+        block +=
+            "\nCompleted Encounters: ${best.completedEncounters}" +
+                    "\nMost Encounters: $mostEncounters" +
+                    "\n=========================================================="
 
         println(block)
 

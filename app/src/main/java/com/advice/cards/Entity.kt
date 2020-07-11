@@ -155,6 +155,7 @@ open class Hero(val deck: Deck = Deck(), hp: Int) : Entity(hp) {
     }
 
     fun end() {
+        statusEffects.clear()
         deck.endCombat()
     }
 
