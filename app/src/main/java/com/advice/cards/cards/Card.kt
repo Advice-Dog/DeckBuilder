@@ -114,8 +114,6 @@ abstract class Effect {
 class DamageEffect(private val amount: Int) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?): Int {
-
-
         if (target != null) {
             return target.getScaledDamage(self, amount)
         }
@@ -133,7 +131,7 @@ class DamageEffect(private val amount: Int) : Effect() {
 
     override fun apply(self: Entity, target: Entity) {
         val damage = getScaledValue(self, target)
-        target.dealDamage(damage)
+        target.dealDamage(self, damage)
     }
 
     override fun toString() = "Deal $amount damage."
@@ -173,7 +171,7 @@ class ScaledDamageEffect(private val amount: Int, private val scale: Int = 1) : 
 
     override fun apply(self: Entity, target: Entity) {
         val damage = getScaledValue(self, target)
-        target.dealDamage(damage)
+        target.dealDamage(self, damage)
     }
 
     override fun toString() = "Deal $amount damage. Strength affects this card $scale times."
@@ -201,7 +199,7 @@ class PerfectedStrikeDamageEffect(private val amount: Int, private val bonus: In
 
     override fun apply(self: Entity, target: Entity) {
         val damage = getScaledValue(self, target)
-        target.dealDamage(damage)
+        target.dealDamage(self, damage)
     }
 
     override fun toString() =
@@ -226,6 +224,22 @@ class BlockEffect(private val amount: Int) : Effect() {
     }
 }
 
+class DoubleBlockEffect() : Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?) = self.getBlock()
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Double your Block."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        self.addBlock(getScaledValue(self, target))
+    }
+
+    override fun toString(): String {
+        return "Double your Block."
+    }
+}
+
 class BlockDamageEffect : Effect() {
     override fun getScaledValue(self: Entity, target: Entity?): Int {
         return target?.getScaledDamage(self, self.getBlock()) ?: self.getBlock()
@@ -237,7 +251,7 @@ class BlockDamageEffect : Effect() {
 
     override fun apply(self: Entity, target: Entity) {
         val amount = getScaledValue(self, target)
-        target.dealDamage(amount)
+        target.dealDamage(self, amount)
     }
 
     override fun toString(): String {

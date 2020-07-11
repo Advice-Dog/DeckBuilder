@@ -1,6 +1,5 @@
 package com.advice.cards.cards
 
-import com.advice.cards.GameManager
 import com.advice.cards.RNG
 import com.advice.cards.cards.colourless.Bandaid
 import com.advice.cards.logger.CombatLogger
@@ -103,6 +102,12 @@ class Deck(cards: List<Card> = emptyList()) {
     }
 
     fun play(card: Card) {
+        // Only play powers once.
+        if (card.type == CardType.POWER) {
+            exhaustCard(card)
+            return
+        }
+
         // todo: add in other logic for post-play
         if (card is Bandaid) {
             exhaustCard(card)

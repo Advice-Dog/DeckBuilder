@@ -4,9 +4,7 @@ import androidx.annotation.CallSuper
 import com.advice.cards.cards.Card
 import com.advice.cards.cards.Deck
 import com.advice.cards.cards.red.attack.Strike
-import com.advice.cards.cards.status.FlexBuff
-import com.advice.cards.cards.status.StatusEffect
-import com.advice.cards.cards.status.Vulnerable
+import com.advice.cards.cards.status.*
 import com.advice.cards.encounters.enemies.Cultist
 import com.advice.cards.logger.CombatLogger
 import kotlin.math.abs
@@ -33,7 +31,7 @@ open class Entity(
 
     open val image = R.drawable.cultist
 
-    fun dealDamage(amount: Int) {
+    fun dealDamage(attacker: Entity, amount: Int) {
         CombatLogger.onMessage("${this.javaClass.simpleName} is hurt for $amount damage.")
 
         if (armor > 0) {
@@ -45,6 +43,11 @@ open class Entity(
         }
 
         hp = max(hp, 0)
+
+        val thornsDamage = statusEffects.filterIsInstance<Thorns>().sumBy { it.amount }
+        if (thornsDamage > 0) {
+            attacker.dealDamage(this, thornsDamage)
+        }
     }
 
     fun healDamage(amount: Int) {
@@ -87,7 +90,8 @@ open class Entity(
             return i * 3
         }
 
-        return statusEffects.filterIsInstance<FlexBuff>().sumBy { it.strength }
+        return statusEffects.filterIsInstance<FlexBuff>().sumBy { it.strength } +
+                statusEffects.filterIsInstance<StrengthUp>().sumBy { it.strength }
     }
 
     fun getAgility() = agility

@@ -13,9 +13,10 @@ class EntityTest {
 
     @Test
     fun `deal damage`() {
+        val attacker = Entity(10)
         val entity = Entity(10)
 
-        entity.dealDamage(5)
+        entity.dealDamage(attacker, 5)
 
         assertEquals(0, entity.getBlock())
         assertEquals(5, entity.getHealth())
@@ -23,10 +24,11 @@ class EntityTest {
 
     @Test
     fun `deal damage through armor`() {
+        val attacker = Entity(10)
         val entity = Entity(10)
         entity.addBlock(5)
 
-        entity.dealDamage(10)
+        entity.dealDamage(attacker, 10)
 
         assertEquals(0, entity.getBlock())
         assertEquals(5, entity.getHealth())
@@ -34,10 +36,11 @@ class EntityTest {
 
     @Test
     fun `deal damage does not go through armor`() {
+        val attacker = Entity(10)
         val entity = Entity(10)
         entity.addBlock(20)
 
-        entity.dealDamage(10)
+        entity.dealDamage(attacker, 10)
 
         assertEquals(10, entity.getBlock())
         assertEquals(10, entity.getHealth())

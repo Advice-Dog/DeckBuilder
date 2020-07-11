@@ -5,6 +5,7 @@ import com.advice.cards.cards.CardRarity
 import com.advice.cards.cards.colourless.Bandaid
 import com.advice.cards.cards.colourless.Finesse
 import com.advice.cards.cards.red.attack.*
+import com.advice.cards.cards.red.power.Inflame
 import com.advice.cards.cards.red.skill.*
 import com.advice.cards.encounters.Encounter
 import com.advice.cards.encounters.enemies.EnemyGroup
@@ -31,10 +32,15 @@ object GameManager {
         Armaments(),
         PerfectedStrike(),
 
+
         // uncommon
         SeeingRed(),
         Shockwave(),
         Uppercut(),
+        Entrench(),
+        FlameBarrier(),
+        Inflame(),
+
 
         // rare
         Bludgeon()
