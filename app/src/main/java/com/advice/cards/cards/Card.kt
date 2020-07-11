@@ -396,3 +396,15 @@ class CopyToDiscardEffect(private val card: Card) : Effect() {
         (self as Hero).deck.discardCard(card)
     }
 }
+
+class ExhaustEffect(private val card: Card) : Effect() {
+    override fun getScaledValue(self: Entity, target: Entity?) = -1
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Exhaust."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        (self as Hero).deck.exhaustCard(card)
+    }
+}

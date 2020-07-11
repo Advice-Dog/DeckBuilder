@@ -94,8 +94,11 @@ class Deck(cards: List<Card> = emptyList()) {
     }
 
     override fun toString(): String {
-        val cards = deck.groupBy { it.name }
-        val names = cards.map { "${it.value.size}x ${it.key}" }
+        val cards = deck.groupBy { it.name.replace("+", "") }.map {
+            it.key to it.value.size
+        }.sortedByDescending { it.second }
+            .toMap()
+        val names = cards.map { "${it.value}x ${it.key}" }
 
 
         return "${deck.size}: ${names.joinToString()}"

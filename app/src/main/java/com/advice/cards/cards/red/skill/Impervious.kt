@@ -8,6 +8,6 @@ class Impervious : Card(CardType.SKILL, TargetType.SELF, CardRarity.RARE) {
 
     init {
         effects.add(BlockEffect(amount))
-        // todo: exhaust
+        effects.add(ExhaustEffect(this))
     }
 }
