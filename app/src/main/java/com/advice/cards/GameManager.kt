@@ -40,10 +40,13 @@ object GameManager {
         Entrench(),
         FlameBarrier(),
         Inflame(),
+        Pummel(),
+        Rampage(),
 
 
         // rare
-        Bludgeon()
+        Bludgeon(),
+        Impervious()
     )
 
     private val colourlessCards = listOf(

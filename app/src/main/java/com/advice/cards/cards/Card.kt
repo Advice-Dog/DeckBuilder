@@ -137,6 +137,32 @@ class DamageEffect(private val amount: Int) : Effect() {
     override fun toString() = "Deal $amount damage."
 }
 
+class DamageRampEffect(private val base: Int, private val ramp: Int) : Effect() {
+
+    var count = 0
+
+    override fun getScaledValue(self: Entity, target: Entity?): Int {
+        val amount = base + (ramp * count)
+        if (target != null) {
+            return target.getScaledDamage(self, amount)
+        }
+
+        return amount + self.getStrength()
+    }
+
+    override fun getDescription(self: Entity, target: Entity?): String {
+        return "Deal ${getScaledValue(self, target)} damage. Increase this card's damage by $ramp this combat."
+    }
+
+    override fun apply(self: Entity, target: Entity) {
+        val damage = getScaledValue(self, target)
+        target.dealDamage(self, damage)
+        count++
+    }
+
+    override fun toString() = "Deal ${base + ramp * count} damage. Increase this card's damage by $ramp this combat."
+}
+
 class HealEffect(private val amount: Int) : Effect() {
 
     override fun getScaledValue(self: Entity, target: Entity?) = amount
