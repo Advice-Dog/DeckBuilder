@@ -2,11 +2,13 @@ package com.advice.cards.neat
 
 import com.advice.cards.RNG
 import com.advice.cards.logger.CombatLogger
+import com.evo.NEAT.Environment
 import com.evo.NEAT.Genome
 import com.evo.NEAT.Pool
-import com.evo.NEAT.SuspendEnvironment
-import com.evo.NEAT.config.NEAT_Config
+import com.evo.NEAT.config.NEATConfig
 import java.util.*
+
+const val GENERATIONS = 50
 
 const val TURN_LIMIT = 25
 const val TIME_LIMIT = 5_000L
@@ -16,14 +18,14 @@ var mostEncountersPerGeneration = 0
 var genomeStartTimer = 0L
 
 
-class SlayTheSpire : SuspendEnvironment {
+class SlayTheSpire : Environment {
 
     companion object {
 
         var index = 0
     }
 
-    override suspend fun evaluateFitness(population: List<Genome>) {
+    override fun evaluateFitness(population: List<Genome>) {
         mostEncountersPerGeneration = 0
         //index++
 
@@ -46,14 +48,21 @@ class SlayTheSpire : SuspendEnvironment {
 fun main() {
     val instance = SlayTheSpire()
 
-    val pool = Pool()
+    val config = NEATConfig.Builder()
+        .setPopulationSize(1500)
+        .setBatchSize(1500)
+        .setInputs(9)
+        .setOutputs(5)
+        .build()
+
+    val pool = Pool(config)
     pool.initializePool()
 
     var generation = 0
 
     var top: Genome = pool.topGenome
 
-    while (generation < NEAT_Config.GENERATIONS) {
+    while (generation < GENERATIONS) {
         pool.evaluateFitness(instance)
         top = pool.topGenome
 
